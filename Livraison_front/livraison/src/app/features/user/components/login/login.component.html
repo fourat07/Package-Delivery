@@ -1,0 +1,78 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="logo-container">
+      <img src="assets/images/—Pngtree—truck insurance agency logo ideas_15457124.png" alt="Logo FastDelivery" class="logo">
+      <h2>Bienvenue</h2>
+      <p class="subtitle">Suivez vos colis et gérez vos livraisons</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm" class="login-form">
+      <div class="form-group">
+        <label for="username">Nom d'utilisateur</label>
+        <div class="input-container" [class.invalid]="username.invalid && (username.dirty || username.touched)">
+          <i class="icon-user"></i>
+          <input 
+            [(ngModel)]="credentials.username" 
+            #username="ngModel"
+            name="username" 
+            id="username"
+            type="text" 
+            class="form-control" 
+            placeholder="Entrez votre nom d'utilisateur" 
+            required
+            minlength="4">
+        </div>
+        <div *ngIf="username.invalid && (username.dirty || username.touched)" class="error-message">
+          <span *ngIf="username.errors?.['required']">Le nom d'utilisateur est requis</span>
+          <span *ngIf="username.errors?.['minlength']">Minimum 4 caractères</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <div class="input-container" [class.invalid]="password.invalid && (password.dirty || password.touched)">
+          <i class="icon-lock"></i>
+          <input 
+            [(ngModel)]="credentials.password" 
+            #password="ngModel"
+            name="password" 
+            id="password"
+            [type]="getPasswordFieldType()" 
+            class="form-control" 
+            placeholder="Entrez votre mot de passe" 
+            required
+            minlength="6">
+          <i [class]="getEyeIconClass()" (click)="togglePasswordVisibility()"></i>
+        </div>
+        <div *ngIf="password.invalid && (password.dirty || password.touched)" class="error-message">
+          <span *ngIf="password.errors?.['required']">Le mot de passe est requis</span>
+          <span *ngIf="password.errors?.['minlength']">Minimum 6 caractères</span>
+        </div>
+      </div>
+
+      <div *ngIf="loginError" class="error-message" style="text-align: center; margin-bottom: 1rem;">
+        {{ loginError }}
+      </div>
+
+      <div class="form-footer">
+        <button 
+          type="submit" 
+          class="btn-login" 
+          [disabled]="loginForm.invalid || isLoading">
+          <span *ngIf="!isLoading">Se connecter</span>
+          <span *ngIf="isLoading" class="spinner"></span>
+        </button>
+        
+        <div class="links">
+          <a routerLink="/user/forgot-password" class="link">Mot de passe oublié ?</a>
+          <span class="divider">|</span>
+          <a [routerLink]="['/user/register']" class="link">Créer un compte</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="delivery-illustration">
+    <img src="assets/images/illustration.png" alt="Illustration de livraison">
+  </div>
+</div>

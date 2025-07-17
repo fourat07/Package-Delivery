@@ -1,0 +1,126 @@
+.navbar {
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 0 2rem; /* Removed vertical padding */
+  height: 60px; /* Fixed navbar height */
+  display: flex;
+  align-items: center; /* Vertically center all content */
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  height: 100%; /* Take full navbar height */
+}
+
+/* Logo container adjustments */
+.logo-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  /* Remove padding: 0 10px if you want more width */
+}
+
+/* Logo size adjustments */
+.logo {
+  height: 50px; /* Increased from 40px */
+  width: auto;
+  transition: transform 0.3s ease; /* Optional: adds smooth hover effect */
+}
+
+/* Optional hover effect */
+.logo:hover {
+  transform: scale(1.05); /* Slight enlargement on hover */
+}
+
+/* For wider logos */
+@media (min-width: 768px) {
+  .logo {
+    height: 60px; /* Larger size on desktop */
+  }
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #333;
+  text-decoration: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.dropdown-toggle:hover {
+  background: #f5f5f5;
+}
+
+.dropdown-icon {
+  font-size: 0.6rem;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  min-width: 160px;
+  z-index: 100;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: #333;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #f5f5f5;
+}
+.logo-container {
+  height: 100%;
+  padding: 0 10px;
+}
+
+.logo {
+  height: 40px; /* Default size */
+  width: auto;
+}
+
+.logo-container {
+  width: 180px; /* Fixed container width */
+  height: 60px; /* Fixed container height */
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}

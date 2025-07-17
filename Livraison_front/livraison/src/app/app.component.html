@@ -1,0 +1,10 @@
+<!-- <nav>
+  <a routerLink="/user/login">Login</a>
+  <a routerLink="/user/register">Register</a>
+  
+
+</nav> -->
+<app-navbar *ngIf="(showNavbar$ | async)"></app-navbar>
+
+<!-- The router-outlet displays the rest of your pages -->
+<router-outlet></router-outlet>

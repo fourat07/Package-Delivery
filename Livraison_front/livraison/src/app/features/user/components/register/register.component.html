@@ -1,0 +1,125 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="logo-container">
+      <img src="assets/images/—Pngtree—truck insurance agency logo ideas_15457124.png" alt="FastDelivery Logo" class="logo">
+      <h2>Create Account</h2>
+      <p class="subtitle">Join our delivery network</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit(registerForm)" #registerForm="ngForm" class="login-form">
+      <!-- Username Field -->
+      <div class="form-group">
+        <label for="username">Username</label>
+        <div class="input-container" [class.invalid]="username.invalid && (username.dirty || username.touched)">
+          <i class="icon-user"></i>
+          <input 
+            [(ngModel)]="user.username" 
+            #username="ngModel"
+            name="username" 
+            id="username"
+            type="text" 
+            class="form-control" 
+            placeholder="Choose username" 
+            required
+            minlength="4">
+        </div>
+        <div *ngIf="username.invalid && (username.dirty || username.touched)" class="error-message">
+          <span *ngIf="username.errors?.['required']">Username is required</span>
+          <span *ngIf="username.errors?.['minlength']">Minimum 4 characters</span>
+        </div>
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="input-container" [class.invalid]="email.invalid && (email.dirty || email.touched)">
+          <i class="icon-email"></i>
+          <input 
+            [(ngModel)]="user.email" 
+            #email="ngModel"
+            name="email" 
+            id="email"
+            type="email" 
+            class="form-control" 
+            placeholder="your@email.com" 
+            required
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+        </div>
+        <div *ngIf="email.invalid && (email.dirty || email.touched)" class="error-message">
+          <span *ngIf="email.errors?.['required']">Email is required</span>
+          <span *ngIf="email.errors?.['pattern']">Enter valid email</span>
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-container" [class.invalid]="password.invalid && (password.dirty || password.touched)">
+          <i class="icon-lock"></i>
+          <input 
+            [(ngModel)]="user.password" 
+            #password="ngModel"
+            name="password" 
+            id="password"
+            [type]="getPasswordFieldType()" 
+            class="form-control" 
+            placeholder="Create password" 
+            required
+            minlength="6">
+          <i [class]="getEyeIconClass()" (click)="togglePasswordVisibility()"></i>
+        </div>
+        <div *ngIf="password.invalid && (password.dirty || password.touched)" class="error-message">
+          <span *ngIf="password.errors?.['required']">Password is required</span>
+          <span *ngIf="password.errors?.['minlength']">Minimum 6 characters</span>
+        </div>
+      </div>
+
+      <!-- Phone Field -->
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <div class="input-container" [class.invalid]="phone.invalid && (phone.dirty || phone.touched)">
+          <i class="icon-phone"></i>
+          <input 
+            [(ngModel)]="user.phoneNumber" 
+            #phone="ngModel"
+            name="phoneNumber" 
+            id="phone"
+            type="tel" 
+            class="form-control" 
+            placeholder="8-digit number" 
+            required
+            pattern="[0-9]{8}">
+        </div>
+        <div *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="error-message">
+          <span *ngIf="phone.errors?.['required']">Phone is required</span>
+          <span *ngIf="phone.errors?.['pattern']">8 digits required</span>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="registerError" class="error-message" style="text-align: center; margin: 1rem 0;">
+        {{ registerError }}
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-footer">
+        <button 
+          type="submit" 
+          class="btn-login" 
+          [disabled]="registerForm.invalid || isLoading">
+          <span *ngIf="!isLoading">Register</span>
+          <span *ngIf="isLoading" class="spinner"></span>
+        </button>
+        
+        <div class="links">
+          <span>Already have an account?</span>
+          <a routerLink="/user/login" class="link">Sign in</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="delivery-illustration">
+    <img src="assets/images/illustration.png" alt="Delivery Illustration">
+  </div>
+</div>
