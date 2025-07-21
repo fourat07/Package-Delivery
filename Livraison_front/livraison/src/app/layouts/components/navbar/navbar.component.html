@@ -1,25 +1,32 @@
-<nav class="navbar">
-  <div class="navbar-container">
-    <!-- Left side content -->
-    <div class="navbar-left">
+<!-- <nav class="navbar">
+  <div class="navbar-content">
+  
+    <div class="navbar-brand">
       <div class="logo-container">
-      <img src="assets/images/—Pngtree—truck insurance agency logo ideas_15457124.png" alt="FastDelivery Logo" class="logo" >
-    </div>
+       
+      </div>
     </div>
 
-    <!-- Right side content -->
-    <div class="navbar-right">
-      <!-- User dropdown -->
-      <div class="dropdown">
-        <button class="dropdown-toggle" (click)="toggleDropdown()">
-          <span class="username">{{ username }}</span>
-          <i class="dropdown-icon">▼</i>
+  
+    <div class="navbar-user">
+      <div class="user-avatar">
+        <mat-icon class="avatar-icon">account_circle</mat-icon>
+      </div>
+      <button class="user-toggle" (click)="toggleMenu()">
+        <mat-icon>{{dropdownOpen ? 'expand_less' : 'expand_more'}}</mat-icon>
+      </button>
+      
+      <div class="user-dropdown" *ngIf="dropdownOpen" @fadeIn>
+        <a class="dropdown-item" routerLink="/profile">
+          <mat-icon>person</mat-icon>
+          <span>Profile</span>
+        </a>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
         </button>
-        <div class="dropdown-menu" *ngIf="dropdownOpen">
-          <a class="dropdown-item" routerLink="/profile">Profile</a>
-          <button class="dropdown-item" (click)="logout()">Logout</button>
-        </div>
       </div>
     </div>
   </div>
-</nav>
+</nav> -->

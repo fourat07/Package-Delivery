@@ -1,126 +1,147 @@
+/* Navbar Styles */
 .navbar {
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  padding: 0 2rem; /* Removed vertical padding */
-  height: 60px; /* Fixed navbar height */
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-width);
+  right: 0;
+  height: 64px;
+  background: linear-gradient(90deg, var(--dark-color), #0d1b2a);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  z-index: 999;
   display: flex;
-  align-items: center; /* Vertically center all content */
+  align-items: center;
+  padding: 0 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.navbar-container {
+.navbar-content {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-  height: 100%; /* Take full navbar height */
 }
 
-/* Logo container adjustments */
-.logo-container {
-  height: 100%;
+/* Brand/Logo */
+.navbar-brand {
   display: flex;
   align-items: center;
-  /* Remove padding: 0 10px if you want more width */
 }
 
-/* Logo size adjustments */
-.logo {
-  height: 50px; /* Increased from 40px */
-  width: auto;
-  transition: transform 0.3s ease; /* Optional: adds smooth hover effect */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-/* Optional hover effect */
-.logo:hover {
-  transform: scale(1.05); /* Slight enlargement on hover */
+.logo-icon {
+  font-size: 28px;
+  color: var(--accent-color);
+  filter: drop-shadow(0 0 6px rgba(72, 149, 239, 0.4));
 }
 
-/* For wider logos */
-@media (min-width: 768px) {
-  .logo {
-    height: 60px; /* Larger size on desktop */
-  }
-}
-
-.navbar-brand {
-  font-weight: bold;
+.logo-text {
   font-size: 1.2rem;
-  color: #333;
-  text-decoration: none;
+  font-weight: 600;
+  background: linear-gradient(to right, var(--accent-color), #4cc9f0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: red;
 }
 
-.dropdown {
+/* User Menu */
+.navbar-user {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.dropdown-toggle {
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(72, 149, 239, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(72, 149, 239, 0.3);
+}
+
+.avatar-icon {
+  color: var(--accent-color);
+  font-size: 24px;
+}
+
+.user-toggle {
   background: none;
   border: none;
+  color: var(--text-light);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
-.dropdown-toggle:hover {
-  background: #f5f5f5;
+.user-toggle:hover {
+  color: var(--accent-color);
+  transform: translateY(1px);
 }
 
-.dropdown-icon {
-  font-size: 0.6rem;
-}
-
-.dropdown-menu {
+/* Dropdown Menu */
+.user-dropdown {
   position: absolute;
+  top: 56px;
   right: 0;
-  background: white;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  min-width: 160px;
-  z-index: 100;
+  min-width: 180px;
+  background: var(--dark-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  z-index: 1001;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dropdown-item {
-  display: block;
-  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: var(--text-light);
   text-decoration: none;
-  color: #333;
-  border: none;
-  background: none;
-  width: 100%;
-  text-align: left;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .dropdown-item:hover {
-  background: #f5f5f5;
-}
-.logo-container {
-  height: 100%;
-  padding: 0 10px;
+  background: rgba(72, 149, 239, 0.1);
+  color: var(--accent-color);
 }
 
-.logo {
-  height: 40px; /* Default size */
-  width: auto;
+.dropdown-item mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
 }
 
-.logo-container {
-  width: 180px; /* Fixed container width */
-  height: 60px; /* Fixed container height */
-  display: flex;
-  align-items: center;
+.dropdown-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 4px 0;
 }
 
-.logo {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* When sidebar is closed */
+.sidebar-closed .navbar {
+  left: 0;
 }

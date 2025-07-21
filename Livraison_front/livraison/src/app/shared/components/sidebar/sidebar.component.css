@@ -1,0 +1,311 @@
+/* SIDEBAR */
+.sidebar  {
+  position: fixed; /* ou fixed si besoin */
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100%;
+  background: var(--light);
+  z-index: 2000;
+  font-family: var(--lato);
+  transition: width 0.3s ease;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  transform: translateX(0);
+  
+  
+}
+
+.sidebar.hide {
+  width: 60px;
+}
+
+.sidebar .brand {
+  font-size: 24px;
+  font-weight: 700;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  color: var(--blue);
+  position: sticky;
+  top: 0;
+  left: 0;
+  background: var(--light);
+  z-index: 500;
+  padding-bottom: 20px;
+  box-sizing: content-box;
+}
+
+.sidebar .brand .bx {
+  min-width: 60px;
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar .side-menu {
+  width: 100%;
+  margin-top: 48px;
+}
+
+.sidebar .side-menu li {
+  height: 48px;
+  background: transparent;
+  margin-left: 6px;
+  border-radius: 48px 0 0 48px;
+  padding: 4px;
+}
+
+.sidebar .side-menu li.active {
+  background: var(--grey);
+  position: relative;
+}
+
+.sidebar .side-menu li.active::before {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  top: -40px;
+  right: 0;
+  box-shadow: 20px 20px 0 var(--grey);
+  z-index: -1;
+}
+
+.sidebar .side-menu li.active::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  bottom: -40px;
+  right: 0;
+  box-shadow: 20px -20px 0 var(--grey);
+  z-index: -1;
+}
+
+.sidebar .side-menu li a {
+  width: 100%;
+  height: 100%;
+  background: var(--light);
+  display: flex;
+  align-items: center;
+  border-radius: 48px;
+  font-size: 16px;
+  color: var(--dark);
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+
+.sidebar .side-menu.top li.active a {
+  color: var(--blue);
+}
+
+.sidebar.hide .side-menu li a {
+  width: calc(48px - (4px * 2));
+  transition: width .3s ease;
+}
+
+.sidebar .side-menu li a.logout {
+  color: var(--red);
+}
+
+.sidebar .side-menu.top li a:hover {
+  color: var(--blue);
+}
+
+.sidebar .side-menu li a .bx {
+  min-width: calc(60px  - ((4px + 6px) * 2));
+  display: flex;
+  justify-content: center;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Increased gap */
+  height: 64px; /* Increased height */
+  padding: 0 35px; /* Increased padding */
+  margin-top: 0 30px; /* Increased margin */
+  text-decoration: none;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px; /* Increased from 40px */
+  height: 48px; /* Increased from 40px */
+  transition: all 0.3s ease;
+}
+
+.logo-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.brand:hover .logo-img {
+  transform: scale(1.08); /* Slightly stronger hover effect */
+}
+
+.brand-text {
+  font-family: var(--poppins);
+  font-size: 1.5rem; /* Increased from 1.25rem */
+  font-weight: 700; /* Bolder weight */
+  color: var(--blue);
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px; /* Improved readability */
+}
+
+.brand:hover .brand-text {
+  color: var(--dark-blue); /* Darker shade on hover */
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+/* When sidebar is collapsed */
+.sidebar-collapsed .brand-text {
+  display: none;
+}
+
+.sidebar-collapsed .logo-container {
+  width: 42px; /* Slightly larger when collapsed */
+  height: 42px;
+  margin: 0 auto; /* Center in collapsed sidebar */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .brand {
+    height: 56px; /* Slightly smaller on tablets */
+    gap: 12px;
+  }
+  
+  .logo-container {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .brand-text {
+    font-size: 1.3rem;
+  }
+}
+
+/* Responsive Sidebar */
+@media screen and (max-width: 1200px) {
+  .sidebar {
+    width: 240px;
+  }
+  .sidebar.hide {
+    width: 60px;
+  }
+  .brand {
+    padding: 0 25px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .sidebar {
+    width: 220px;
+    transform: translateX(-100%);
+    z-index: 3000;
+    transition: transform 0.3s ease, width 0.3s ease;
+  }
+  
+  .sidebar.hide {
+    transform: translateX(0);
+    width: 60px;
+  }
+  
+  .sidebar:not(.hide) {
+    transform: translateX(0);
+    box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+  }
+  
+  .brand {
+    padding: 0 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 280px;
+  }
+  
+  .sidebar.hide {
+    width: 0;
+    overflow: hidden;
+  }
+  
+  .brand {
+    padding: 0 30px;
+  }
+  
+  .side-menu li a .text {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .sidebar {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .brand {
+    height: 56px;
+    padding: 0 20px;
+  }
+  
+  .logo-container {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .brand-text {
+    font-size: 1.3rem;
+  }
+}
+
+/* Add to your existing CSS */
+.mobile-sidebar-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--dark);
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-right: 15px;
+}
+
+@media (max-width: 992px) {
+  .mobile-sidebar-toggle {
+    display: block;
+  }
+  
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.mobile-visible {
+    transform: translateX(0);
+  }
+}
+
+.sidebar.collapsed {
+  width: 80px; /* or 0 if you want to hide completely */
+  transition: width 0.3s ease;
+  overflow-x: hidden;
+}
+
+.sidebar.collapsed .brand-text,
+.sidebar.collapsed .side-menu li a .text {
+  display: none;
+}
+
+/* When sidebar is closed */
+.sidebar.closed {
+  transform: translateX(-100%);
+}

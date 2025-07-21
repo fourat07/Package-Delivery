@@ -23,6 +23,9 @@ interface CurrentUser {
   providedIn: 'root'
 })
 export class UserService {
+  getNotificationCount() {
+    throw new Error('Method not implemented.');
+  }
   private baseUrl = 'http://localhost:8081/auth';
   private readonly TOKEN_KEY = 'auth_token';
   private currentUserSubject = new BehaviorSubject<CurrentUser | null>(null);
@@ -152,4 +155,6 @@ export class UserService {
     }
     return throwError(() => new Error(errorMessage));
   }
+
+
 }

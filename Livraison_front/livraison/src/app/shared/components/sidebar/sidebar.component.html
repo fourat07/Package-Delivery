@@ -1,0 +1,48 @@
+
+
+<div [ngClass]="{ 'sidebar-collapsed': isCollapsed, 'sidebar-expanded': !isCollapsed }">
+<section class="sidebar" [@sidebarState]="currentState" [class.hide]="isCollapsed && !isMobile"  [ngClass]="{
+    'collapsed': isCollapsed && !isMobile,
+    'closed': isSidebarClosed && isMobile
+  }" [class.closed]="isSidebarClosed">
+  <div class="brand">
+  <div class="logo-container">
+    <img src="assets/images/—Pngtree—truck insurance agency logo ideas_15457124.png" alt="Logo" class="logo-img">
+  </div>
+  <span class="brand-text">Delivery</span>
+  
+</div>
+
+  <ul class="side-menu top">
+<ng-container *ngFor="let link of links">
+  <li *ngIf="link.roles.includes(userRole)" [class.active]="activeLink === link.id">
+    <a [routerLink]="link.route" (click)="setActive(link.id)">
+      <i class="bx" [ngClass]="link.icon"></i>
+      <span class="text">{{ link.label }}</span>
+    </a>
+  </li>
+</ng-container>
+
+  </ul>
+
+
+
+
+
+  
+  <ul class="side-menu">
+    <li [class.active]="activeLink === 'settings'">
+      <a routerLink="/settings" (click)="setActive('settings')">
+        <i class='bx bxs-cog'></i>
+        <span class="text">Settings</span>
+      </a>
+    </li>
+    <li>
+      <a href="#" class="logout" (click)="onLogout()">
+        <i class='bx bxs-log-out-circle'></i>
+        <span class="text">Logout</span>
+      </a>
+    </li>
+  </ul>
+</section> 
+</div>
