@@ -1,0 +1,49 @@
+  <div *ngIf="loading">Chargement...</div>
+
+  <div *ngIf="!loading && livraison">
+    <h2>Livraison #{{livraison.livraisonId}} - {{livraison.reference}}</h2>
+
+    <div *ngFor="let colisId of colisIds"
+    >
+      <h3>Colis #{{colisId}} - Code-barres: {{colisDetails[colisId].codeBarre}}</h3>
+      <div class="colis-details">
+        <p  *ngIf="currentUserRole === 'ROLE_ADMIN' "  >Adresse: {{colisDetails[colisId].adresse}}</p>
+        <p *ngIf="currentUserRole === 'ROLE_ADMIN' " >Téléphone: {{colisDetails[colisId].telephone}}</p>
+        <p *ngIf="currentUserRole === 'ROLE_ADMIN' " >Prix: {{colisDetails[colisId].prix | currency:'DT'}}</p>
+        <p *ngIf="currentUserRole === 'ROLE_ADMIN' " >Paiement: {{colisDetails[colisId].paiement}}</p>
+        <p *ngIf="currentUserRole === 'ROLE_ADMIN'" >Client: {{colisDetails[colisId].user.username}}</p>
+<p *ngIf="currentUserRole === 'ROLE_ADMIN' " >Frais de retour: {{ colisDetails[colisId].frais_retour || 0 | currency:'DT' }}</p>
+
+
+      <div class="timeline-container">
+        <div *ngIf="historiqueMap[colisId]?.length; else vide" class="timeline-wrapper">
+          <div class="timeline">
+            <div *ngFor="let h of historiqueMap[colisId]; let i = index" class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="status-change">
+                  <span class="old-status">{{h.ancienStatut}}</span>
+                  <span class="arrow">→</span>
+                  <span class="new-status">{{h.nouveauStatut}}</span>
+                </div>
+                <div class="timeline-meta">
+                  <span class="date">{{h.dateChangement | date:'mediumDate'}}</span>
+                  <span class="time">{{h.dateChangement | date:'shortTime'}}</span>
+                </div>
+                <div *ngIf="h.changedBy" class="changed-by">Changed by: {{h.changedBy}}</div>
+              <div *ngIf="h.commentaire" class="comment">
+    {{h.commentaire}}
+  </div>
+  <div *ngIf="!h.commentaire" class="no-comment"><i class="fas fa-comment-slash"></i>
+    
+  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #vide>
+          <div class="no-history">No history available</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>

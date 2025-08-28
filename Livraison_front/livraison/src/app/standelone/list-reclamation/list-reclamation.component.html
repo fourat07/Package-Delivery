@@ -1,0 +1,97 @@
+
+
+<!-- 🔍 Barre de filtres -->
+<div class="filters mb-3">
+  <input *ngIf="currentUserRole === 'ROLE_ADMIN'" [(ngModel)]="searchAgent" (ngModelChange)="applyFilters()" placeholder="Rechercher par agent" />
+  <select [(ngModel)]="searchStatut" (ngModelChange)="applyFilters()">
+    <option value="">Tous les statuts</option>
+    <option *ngFor="let s of statuts" [value]="s">{{ s }}</option>
+  </select>
+  <input type="date" [(ngModel)]="searchDate" (ngModelChange)="applyFilters()" />
+
+  <button (click)="toggleSortDate()">
+    Trier par date ({{ sortDirection === 'asc' ? '⬆' : '⬇' }})
+  </button>
+
+  <button *ngIf="currentUserRole === 'ROLE_ADMIN' || currentUserRole === 'ROLE_EXPEDITEUR'"  (click)="navuigateToCreate()">Ajout réclamation</button>
+</div>
+
+<!-- Tableau -->
+<table class="table">
+  <thead>
+    <tr>
+      <th>Titre</th>
+      <th>Description</th>
+      <th>Statut</th>
+      <th *ngIf="currentUserRole === 'ROLE_ADMIN' || currentUserRole === 'ROLE_AGENT'">Agent</th>
+      <th>Date Création</th>
+      <th *ngIf="currentUserRole === 'ROLE_ADMIN'">Assignée</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let r of paginatedReclamations">
+      <td>{{ r.titre }}</td>
+      <td>{{ r.description }}</td>
+
+     <!-- Statut -->
+<td>
+  <span *ngIf="currentUserRole === 'ROLE_EXPEDITEUR'">{{ r.statut }}</span>
+
+  <ng-container *ngIf="currentUserRole === 'ROLE_ADMIN' || currentUserRole === 'ROLE_AGENT'">
+    <!-- Select affiché uniquement si EN_ATTENTE -->
+    <select *ngIf="r.statut === StatutReclamation.EN_ATTENTE"
+            [(ngModel)]="selectedStatuts[r.id!]"
+            name="statutSelect{{ r.id }}"
+            (change)="updateStatut(r.id!, selectedStatuts[r.id!])">
+      <option *ngFor="let s of statuts" [ngValue]="s">{{ s }}</option>
+    </select>
+
+    <!-- Si pas en attente -->
+<span *ngIf="r.statut !== StatutReclamation.EN_ATTENTE">
+  {{ r.statut }}
+</span>
+  </ng-container>
+</td>
+
+<!-- Agent assigné -->
+<td *ngIf="currentUserRole === 'ROLE_ADMIN' || currentUserRole === 'ROLE_AGENT'">
+  <span *ngIf="r.agentAttribue">({{ r.agentAttribue.username }})</span>
+</td>
+
+      <!-- Date -->
+      <td>{{ r.dateCreation | date: 'dd/MM/yyyy HH:mm' }}</td>
+
+      <!-- Attribution agent -->
+          <td *ngIf="currentUserRole === 'ROLE_ADMIN'">
+             <select
+  [(ngModel)]="selectedAgents[r.id!]"
+  name="agentSelect{{ r.id }}"
+  (change)="assignAgent(r.id!, selectedAgents[r.id!])"
+  [disabled]="r.agentAttribue != null"
+>
+  <option value="" disabled selected>-- Choisir un agent --</option>
+ <option *ngFor="let a of agents"
+        [ngValue]="a.idUser"
+        [disabled]="a.nbReclamationsAssignees >= 3 || r.agentAttribue?.idUser === a.idUser">
+  {{ a.username }} ({{ a.nbReclamationsAssignees }} / 3)
+</option>
+</select>
+
+              </td>
+
+      <!-- Actions -->
+      <td>
+        <button (click)="delete(r.id!)">Supprimer</button>
+        <button (click)="navigateToDetails(r.id!)">Détails</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- 📌 Pagination -->
+<div class="pagination">
+  <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">⬅️ Précédent</button>
+  <span>Page {{ currentPage }} / {{ totalPages() }}</span>
+  <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages()">Suivant ➡️</button>
+</div>

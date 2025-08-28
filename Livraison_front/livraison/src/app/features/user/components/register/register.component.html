@@ -1,125 +1,164 @@
-<div class="login-container">
-  <div class="login-card">
-    <div class="logo-container">
-      <img src="assets/images/—Pngtree—truck insurance agency logo ideas_15457124.png" alt="FastDelivery Logo" class="logo">
-      <h2>Create Account</h2>
-      <p class="subtitle">Join our delivery network</p>
+<div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="showModal" style="background: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Register New User</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <form (ngSubmit)="onSubmit(registerForm)" #registerForm="ngForm">
+
+          <!-- Username -->
+          <div class="form-group mb-3">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              [(ngModel)]="user.username"
+              #username="ngModel"
+              required
+              minlength="4"
+              placeholder="Choose a username" />
+            <div class="text-danger small" *ngIf="username.invalid && (username.dirty || username.touched)">
+              <span *ngIf="username.errors?.['required']">Username is required.</span>
+              <span *ngIf="username.errors?.['minlength']">Minimum 4 characters.</span>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group mb-3">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              [(ngModel)]="user.email"
+              #email="ngModel"
+              required
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+              placeholder="your@email.com" />
+            <div class="text-danger small" *ngIf="email.invalid && (email.dirty || email.touched)">
+              <span *ngIf="email.errors?.['required']">Email is required.</span>
+              <span *ngIf="email.errors?.['pattern']">Invalid email format.</span>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group mb-3">
+            <label for="password">Password</label>
+            <input
+              [type]="passwordVisible ? 'text' : 'password'"
+              class="form-control"
+              id="password"
+              name="password"
+              [(ngModel)]="user.password"
+              #password="ngModel"
+              required
+              minlength="6"
+              placeholder="Create a password" />
+            <div class="text-danger small" *ngIf="password.invalid && (password.dirty || password.touched)">
+              <span *ngIf="password.errors?.['required']">Password is required.</span>
+              <span *ngIf="password.errors?.['minlength']">Minimum 6 characters.</span>
+            </div>
+          </div>
+
+          <!-- Toggle password visibility -->
+          <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="showPassword" (change)="passwordVisible = !passwordVisible">
+            <label class="form-check-label" for="showPassword">Show Password</label>
+          </div>
+
+          <!-- Phone Number -->
+          <div class="form-group mb-3">
+            <label for="phoneNumber">Phone Number</label>
+            <input
+              type="tel"
+              class="form-control"
+              id="phoneNumber"
+              name="phoneNumber"
+              [(ngModel)]="user.phoneNumber"
+              #phone="ngModel"
+              required
+              pattern="[0-9]{8}"
+              placeholder="8-digit number" />
+            <div class="text-danger small" *ngIf="phone.invalid && (phone.dirty || phone.touched)">
+              <span *ngIf="phone.errors?.['required']">Phone number is required.</span>
+              <span *ngIf="phone.errors?.['pattern']">Must be exactly 8 digits.</span>
+            </div>
+          </div>
+
+          <!-- Adresse -->
+          <div class="form-group mb-3">
+            <label for="adresse">Adresse</label>
+            <input
+              type="text"
+              class="form-control"
+              id="adresse"
+              name="adresse"
+              [(ngModel)]="user.adresse"
+              #adresse="ngModel"
+              required
+              placeholder="Enter address" />
+            <div class="text-danger small" *ngIf="adresse.invalid && (adresse.dirty || adresse.touched)">
+              <span *ngIf="adresse.errors?.['required']">Address is required.</span>
+            </div>
+          </div>
+
+          <!-- Role -->
+          <div class="form-group mb-3">
+            <label for="role">Role</label>
+            <select
+              class="form-control"
+              id="role"
+              name="role"
+              [(ngModel)]="user.role"
+              #role="ngModel"
+              required>
+              <option value="" disabled>Select a role</option>
+              <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+            </select>
+            <div class="text-danger small" *ngIf="role.invalid && (role.dirty || role.touched)">
+              <span *ngIf="role.errors?.['required']">Role is required.</span>
+            </div>
+          </div>
+
+          <!-- Frais Retour (conditional) -->
+          <div class="form-group mb-3" *ngIf="user.role === 'ROLE_EXPEDITEUR'">
+            <label for="frais_retour">Frais Retour</label>
+            <input
+              type="number"
+              step="0.01"
+              class="form-control"
+              id="frais_retour"
+              name="frais_retour"
+              [(ngModel)]="user.frais_retour"
+              placeholder="Enter return fees" />
+          </div>
+
+          <!-- Error message (optional) -->
+          <div *ngIf="registerError" class="text-danger text-center mt-2">
+            {{ registerError }}
+          </div>
+
+          <!-- Submit Button -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success" [disabled]="registerForm.invalid || isLoading">
+              <span *ngIf="!isLoading">Register</span>
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+          </div>
+
+        </form>
+      </div>
+
     </div>
-
-    <form (ngSubmit)="onSubmit(registerForm)" #registerForm="ngForm" class="login-form">
-      <!-- Username Field -->
-      <div class="form-group">
-        <label for="username">Username</label>
-        <div class="input-container" [class.invalid]="username.invalid && (username.dirty || username.touched)">
-          <i class="icon-user"></i>
-          <input 
-            [(ngModel)]="user.username" 
-            #username="ngModel"
-            name="username" 
-            id="username"
-            type="text" 
-            class="form-control" 
-            placeholder="Choose username" 
-            required
-            minlength="4">
-        </div>
-        <div *ngIf="username.invalid && (username.dirty || username.touched)" class="error-message">
-          <span *ngIf="username.errors?.['required']">Username is required</span>
-          <span *ngIf="username.errors?.['minlength']">Minimum 4 characters</span>
-        </div>
-      </div>
-
-      <!-- Email Field -->
-      <div class="form-group">
-        <label for="email">Email</label>
-        <div class="input-container" [class.invalid]="email.invalid && (email.dirty || email.touched)">
-          <i class="icon-email"></i>
-          <input 
-            [(ngModel)]="user.email" 
-            #email="ngModel"
-            name="email" 
-            id="email"
-            type="email" 
-            class="form-control" 
-            placeholder="your@email.com" 
-            required
-            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
-        </div>
-        <div *ngIf="email.invalid && (email.dirty || email.touched)" class="error-message">
-          <span *ngIf="email.errors?.['required']">Email is required</span>
-          <span *ngIf="email.errors?.['pattern']">Enter valid email</span>
-        </div>
-      </div>
-
-      <!-- Password Field -->
-      <div class="form-group">
-        <label for="password">Password</label>
-        <div class="input-container" [class.invalid]="password.invalid && (password.dirty || password.touched)">
-          <i class="icon-lock"></i>
-          <input 
-            [(ngModel)]="user.password" 
-            #password="ngModel"
-            name="password" 
-            id="password"
-            [type]="getPasswordFieldType()" 
-            class="form-control" 
-            placeholder="Create password" 
-            required
-            minlength="6">
-          <i [class]="getEyeIconClass()" (click)="togglePasswordVisibility()"></i>
-        </div>
-        <div *ngIf="password.invalid && (password.dirty || password.touched)" class="error-message">
-          <span *ngIf="password.errors?.['required']">Password is required</span>
-          <span *ngIf="password.errors?.['minlength']">Minimum 6 characters</span>
-        </div>
-      </div>
-
-      <!-- Phone Field -->
-      <div class="form-group">
-        <label for="phone">Phone Number</label>
-        <div class="input-container" [class.invalid]="phone.invalid && (phone.dirty || phone.touched)">
-          <i class="icon-phone"></i>
-          <input 
-            [(ngModel)]="user.phoneNumber" 
-            #phone="ngModel"
-            name="phoneNumber" 
-            id="phone"
-            type="tel" 
-            class="form-control" 
-            placeholder="8-digit number" 
-            required
-            pattern="[0-9]{8}">
-        </div>
-        <div *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="error-message">
-          <span *ngIf="phone.errors?.['required']">Phone is required</span>
-          <span *ngIf="phone.errors?.['pattern']">8 digits required</span>
-        </div>
-      </div>
-
-      <!-- Error Message -->
-      <div *ngIf="registerError" class="error-message" style="text-align: center; margin: 1rem 0;">
-        {{ registerError }}
-      </div>
-
-      <!-- Submit Button -->
-      <div class="form-footer">
-        <button 
-          type="submit" 
-          class="btn-login" 
-          [disabled]="registerForm.invalid || isLoading">
-          <span *ngIf="!isLoading">Register</span>
-          <span *ngIf="isLoading" class="spinner"></span>
-        </button>
-        
-        <div class="links">
-          <span>Already have an account?</span>
-          <a routerLink="/user/login" class="link">Sign in</a>
-        </div>
-      </div>
-    </form>
-  </div>
-
-  <div class="delivery-illustration">
-    <img src="assets/images/illustration.png" alt="Delivery Illustration">
   </div>
 </div>

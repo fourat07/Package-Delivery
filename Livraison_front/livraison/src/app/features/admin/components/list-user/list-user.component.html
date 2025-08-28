@@ -1,0 +1,183 @@
+<div class="um-container">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  
+  <!-- ========== HEADER ========== -->
+  <header class="um-header">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="header-icon">
+          <i class="fas fa-users-cog"></i>
+        </div>
+        <div>
+          <h2>Gestion des utilisateurs</h2>
+          <p class="header-subtitle">Gérer tous les utilisateurs et leurs permissions</p>
+        </div>
+      </div>
+
+      <div class="um-tools">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text"
+                 [(ngModel)]="searchTerm"
+                 placeholder="Rechercher un utilisateur...">
+        </div>
+
+        <select [(ngModel)]="filterRole" class="role-select">
+          <option value="">Tous les rôles</option>
+          <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+        </select>
+
+        <select [(ngModel)]="filterDisponibilite" class="role-select">
+          <option value="">Toutes disponibilités</option>
+          <option value="true">Disponible (OUI)</option>
+          <option value="false">Non disponible (NON)</option>
+        </select>
+
+        <button class="btn btn-primary add-user-btn" (click)="showForm = true">
+          <i class="fas fa-user-plus"></i> Ajouter un utilisateur
+        </button>
+
+        <button class="btn btn-outline view-toggle" (click)="isTableView = !isTableView">
+          <i [class]="isTableView ? 'fas fa-th-large' : 'fas fa-table'"></i>
+          {{ isTableView ? 'Cartes' : 'Tableau' }}
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <div class="um-content">
+    <!-- ========== CARD GRID ========== -->
+    <div class="card-grid" *ngIf="!isTableView">
+      <article class="user-card" *ngFor="let u of paginatedUsers()">
+        <figure class="avatar">
+          <img [src]="u?.photo ? 'http://localhost:8081/user/uploads/profile_photos/' + u?.photo : 'assets/images/default.png'" alt="">
+        </figure>
+
+        <h3>{{ u.username }}</h3>
+        <span class="role-badge" [ngClass]="'role-' + u.role.toLowerCase()" style="background-color: black;">
+          {{ u.role.replace('ROLE_', '') }}
+        </span>
+
+        <ul class="meta">
+          <li><i class="fas fa-envelope"></i> {{ u.email }}</li>
+          <li><i class="fas fa-phone"></i> {{ u.phoneNumber || '—' }}</li>
+          <li><i class="fas fa-map-marker-alt"></i> {{ u.adresse || '—' }}</li>
+          <li *ngIf="u.role === 'ROLE_EXPEDITEUR'">
+            <i class="fas fa-truck"></i> Frais de retour : {{ u.frais_retour }}
+          </li>
+         <li *ngIf="u.role === 'ROLE_LIVREUR' || u.role === 'ROLE_AGENT'">
+            <i *ngIf="u.disponible" class="fa-solid fa-check text-success"></i>
+    <i *ngIf="!u.disponible" class="fa-solid fa-xmark text-danger"></i>
+  Disponibilité :
+
+  <span>
+    
+    {{ u.disponible ? 'OUI' : 'NON' }}
+  </span>
+</li>
+
+        </ul>
+
+        <footer class="card-actions">
+          <button class="btn-icon details" title="Voir les détails" [routerLink]="['/admin/user-details', u.idUser]"><i class="fa-regular fa-eye"></i></button>
+          <button class="btn-icon edit" title="Modifier l'utilisateur" [routerLink]="['/admin/user-update', u.idUser]" (click)="openUpdateModal(u)"><i class="fa-regular fa-pen-to-square"></i></button>
+          <button (click)="deleteUser(u.idUser)" class="btn-icon delete" title="Supprimer l'utilisateur"><i class="fa-regular fa-trash-can"></i></button>
+        </footer>
+      </article>
+
+      <div class="no-results" *ngIf="filteredUsers().length === 0">
+        <i class="fas fa-user-slash"></i>
+        <p>Aucun utilisateur ne correspond à vos critères</p>
+      </div>
+    </div>
+
+    <!-- ========== TABLEAU ========== -->
+    <div class="table-container" *ngIf="isTableView">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>Photo</th>
+            <th>Nom d'utilisateur</th>
+            <th>Email</th>
+            <th>Téléphone</th>
+            <th>Adresse</th>
+            <th>Rôle</th>
+            <th *ngIf="hasExpediteur()">Frais de retour</th>
+            <th >Disponibilité</th>
+            <th width="90">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of paginatedUsers()">
+            <td>
+              <img [src]="u?.photo ? 'http://localhost:8081/user/uploads/profile_photos/' + u?.photo : 'assets/images/default.png'" 
+                   alt="Photo de profil"
+                   class="profile-image">
+            </td>
+            <td>{{ u.username }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.phoneNumber || '—' }}</td>
+            <td>{{ u.adresse || '—' }}</td>
+            <td>
+              <span class="role-badge" [ngClass]="'role-' + u.role.toLowerCase()">
+                {{ u.role.replace('ROLE_', '') }}
+              </span>
+            </td>
+            <td *ngIf="hasExpediteur()">
+              <span *ngIf="u.role === 'ROLE_EXPEDITEUR'">{{ u.frais_retour }}</span>
+              <span *ngIf="u.role !== 'ROLE_EXPEDITEUR'">—</span>   
+            </td>
+            <td *ngIf="hasLivreur() || hasAgent() ">
+              <span *ngIf="u.role === 'ROLE_LIVREUR'|| 'ROLE_AGENT' ">{{ u.disponible ? 'OUI' : 'NON' }}</span>
+            </td>
+
+            <td class="row-actions">
+              <button  class="btn-icon details" title="Voir les détails"  [routerLink]="['/admin/user-details', u.idUser]"><i class="fa-regular fa-eye"></i></button>
+              <button class="btn-icon edit" title="Modifier l'utilisateur" [routerLink]="['/admin/user-update', u.idUser]" (click)="openUpdateModal(u)"><i class="fa-regular fa-pen-to-square"></i></button>
+              <button (click)="deleteUser(u.idUser)" class="btn-icon delete" title="Supprimer l'utilisateur"><i class="fa-regular fa-trash-can"></i></button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredUsers().length === 0">
+            <td colspan="9" class="no-results-cell">
+              <i class="fas fa-user-slash"></i>
+              <p>Aucun utilisateur ne correspond à vos critères</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ========== PAGINATION ========== -->
+    <div class="pagination">
+      <button class="pagination-arrow" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)" aria-label="Page précédente">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div class="page-numbers">
+        <button *ngFor="let page of getPages()" 
+                class="page-btn" 
+                [class.active]="page === currentPage"
+                (click)="goToPage(page)">
+          {{ page }}
+        </button>
+      </div>
+      <button class="pagination-arrow" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)" aria-label="Page suivante">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ======== MODALES ======== -->
+<app-user-form *ngIf="showForm"
+               (userAdded)="onUserAdded($event)"
+               (close)="showForm = false">
+</app-user-form>
+
+<app-userupdate
+  [user]="selectedUser"
+  *ngIf="showUserUpdate"
+  (close)="showUserUpdate = false"
+  (userUpdated)="onUserUpdated($event)">
+</app-userupdate>

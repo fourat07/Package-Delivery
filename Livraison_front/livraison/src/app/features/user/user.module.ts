@@ -10,21 +10,26 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { UserService } from './services/user/user.service';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
+  providers: [UserService],
+
   declarations: [
     UserComponent,
     LoginComponent,
-    RegisterComponent,
-
+    
     ForgotPasswordComponent,
     ResetPasswordComponent,
+    RegisterComponent
 
   ],
   imports: [
     CommonModule,
     UserRoutingModule,
+    HttpClientModule,
     FormsModule, 
     ReactiveFormsModule
   ]

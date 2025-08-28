@@ -1,0 +1,80 @@
+<div *ngIf="loading">Chargement de la tournée...</div>
+
+<div *ngIf="!loading && tournee">
+  <h2>
+    Tournée — {{tourneeId}}  {{ tournee.livreur.username }} — 
+    ({{ tournee.livraisonsCount }} livraison(s)) — 
+    {{ tournee.date | date:'medium' }}
+  </h2>
+
+<!--    ✅ Bouton pour télécharger tous les PDFs 
+  <button (click)="downloadAllLivraisonsPdfs()" class="btn btn-success mb-3">
+    📦 Télécharger tous les PDFs ({{ tournee.livraisons.length }})
+  </button> -->
+
+  <input 
+  type="text" 
+  [(ngModel)]="searchTerm" 
+  (input)="applySearch()" 
+  class="form-control mb-3" 
+  placeholder="🔎 Rechercher une livraison, un colis, un client, un statut..." />
+
+
+<div *ngFor="let l of filteredLivraisons" class="livraison-block">
+    <h3>
+      Livraison #{{ l.livraisonId }} — {{ l.reference }} 
+      ({{ l.colisList.length }} colis)
+      - Statut: {{ l.status }}
+    </h3>
+
+  <button 
+  (click)="downloadLivraisonPdf(l.livraisonId)" 
+  [disabled]="downloadedLivraisons.has(l.livraisonId)"
+  class="btn btn-primary mb-2">
+  📄 Télécharger PDF Livraison #{{ l.reference }}
+</button>
+
+
+    <div *ngFor="let c of l.colisList" class="card colis-card">
+      <p><strong>#{{c.id}} — {{c.codeBarre}}</strong></p>
+      <p>Adresse: {{c.adresse}}</p>
+      <p>Téléphone: {{c.telephone}}</p>
+      <p>Prix: {{c.prix | currency:'DT'}}</p>
+      <p>Paiement: {{c.paiement}}</p>
+      <p>Status: {{c.statut_colis}}</p>
+      <p>Client: {{c.user.username}}</p>
+
+      <h5>Historique :</h5>
+      <div class="timeline-container">
+        <div *ngIf="c.historique?.length; else noHistory" class="timeline-wrapper">
+          <div class="timeline">
+            <div *ngFor="let h of c.historique; let i = index" class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="status-change">
+                  <span class="old-status">{{h.ancienStatut}}</span>
+                  <span class="arrow">→</span>
+                  <span class="new-status">{{h.nouveauStatut}}</span>
+                </div>
+                <div class="timeline-meta">
+                  <span class="date">{{h.dateChangement | date:'mediumDate'}}</span>
+                  <span class="time">{{h.dateChangement | date:'shortTime'}}</span>
+                </div>
+                <div *ngIf="h.changedBy" class="changed-by">✍️ {{h.changedBy}}</div>
+                <div *ngIf="h.commentaire; else noComment" class="comment">
+                  💬 {{h.commentaire}}
+                </div>
+                <ng-template #noComment>
+                  <div class="no-comment"><i class="fas fa-comment-slash"></i> Aucun commentaire</div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #noHistory>
+          <p class="no-history">⚠️ Aucun historique disponible</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

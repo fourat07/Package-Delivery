@@ -11,14 +11,14 @@
 <div class="app-container">
   <div class="sidebar-content-wrapper">
    <app-sidbar *ngIf="(showNavbar$ | async)" [isCollapsed]="isCollapsed"></app-sidbar> 
-   <div class="sidebar-backdrop" 
-     *ngIf="isMobileScreen && !isCollapsed"
-     (click)="isCollapsed = true"></div>
+   <div class="sidebar-backdrop" *ngIf="isMobileScreen && !isCollapsed"(click)="isCollapsed = true"></div>
     <div class="main-content">
          <app-topbar *ngIf="(showNavbar$ | async)" (sidebarToggled)="toggleSidebar()" [class.shifted]="isSidebarOpen"></app-topbar>
 
       <div class="page-content">
+
         <router-outlet></router-outlet>
+        
       </div>
     </div>
   </div>

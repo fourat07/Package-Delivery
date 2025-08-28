@@ -1,0 +1,116 @@
+<div class="container">
+  <h2>Créer une Tournée</h2>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <!-- Filtres -->
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <label for="searchDate">Recherche par date :</label>
+      <input type="date" id="searchDate" class="form-control"
+             [(ngModel)]="searchDate" name="searchDate" (ngModelChange)="applyFilters()">
+    </div>
+
+    <div class="col-md-4">
+      <label for="filterExpediteur">Filtrer par expéditeur :</label>
+      <select id="filterExpediteur" class="form-control"
+              [(ngModel)]="filterExpediteur" name="filterExpediteur" (ngModelChange)="applyFilters()">
+        <option value="">Tous les expéditeurs</option>
+        <option *ngFor="let expediteur of uniqueExpediteurs" [value]="expediteur">
+          {{ expediteur }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Formulaire template-driven -->
+  <form #tourneeForm="ngForm" (ngSubmit)="createTournee()">
+
+    <!-- Sélection du livreur -->
+    <div class="form-group">
+      <label for="livreur">Sélectionner un livreur :</label>
+      <select [(ngModel)]="selectedLivreurId" name="selectedLivreurId" class="form-control" required #livreurCtrl="ngModel"
+              [ngClass]="{'is-invalid': livreurCtrl.invalid && livreurCtrl.touched}">
+        <option [ngValue]="null">-- Choisir un livreur --</option>
+        <option *ngFor="let livreur of livreurs" [ngValue]="livreur.idUser" [disabled]="!livreur.disponible">
+          {{ livreur.username }}
+        </option>
+      </select>
+      <div *ngIf="livreurCtrl.invalid && livreurCtrl.touched" class="invalid-feedback d-block">
+        Le livreur est obligatoire.
+      </div>
+    </div>
+
+    <!-- Date pickup -->
+    <div class="form-group mt-3">
+      <label for="pickupDate">Date de pickup :</label>
+      <input type="datetime-local" id="pickupDate" class="form-control"
+             [(ngModel)]="selectedPickupDate" name="selectedPickupDate" required #pickupCtrl="ngModel"
+             [min]="minDateTime" [ngClass]="{'is-invalid': pickupCtrl.invalid && pickupCtrl.touched}">
+      <div *ngIf="pickupCtrl.invalid && pickupCtrl.touched" class="invalid-feedback d-block">
+        La date de pickup est obligatoire et doit être postérieure à maintenant.
+      </div>
+    </div>
+
+    <!-- Liste des livraisons -->
+    <h3 class="mt-4">Livraisons disponibles :</h3>
+
+    <div class="mb-3">
+<input type="text"
+       class="form-control"
+       placeholder="Rechercher client..."
+       [(ngModel)]="searchClient"
+       [ngModelOptions]="{standalone: true}"
+       (ngModelChange)="applyFilters()">
+
+</div>
+
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <span>{{ filteredLivraisons.length }} livraison(s) trouvée(s)</span>
+      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="toggleSort()">
+        Trier par date {{ sortDirection === 'asc' ? '⬆️' : '⬇️' }}
+      </button>
+    </div>
+
+    <div *ngIf="filteredLivraisons.length === 0" class="text-muted">
+      Aucune livraison en attente.
+    </div>
+
+    <ul *ngIf="filteredLivraisons.length > 0" class="list-group">
+      <li *ngFor="let l of paginatedLivraisons" class="list-group-item">
+        <div class="d-flex align-items-start">
+          <!-- Checkbox -->
+          <input type="checkbox" [checked]="isSelected(l.id)" (change)="toggleLivraisonSelection(l.id, $event)">
+          <div class="ms-2">
+            <strong>{{ l.reference }}</strong> — {{ l.colisCount }} colis 
+            <br>
+            <span>Date création : {{ l.dateCreation | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="badge bg-info text-dark ms-2">Status: {{ l.status }}</span>
+            <br>
+            <span class="text-muted">📍 Pickup : {{ l.user?.adresse || 'Adresse non définie' }}</span>
+            <br>
+            <small class="text-primary">Client: {{ l.user?.username || 'Non spécifié' }}</small>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <!-- Pagination -->
+    <div *ngIf="filteredLivraisons.length > 0" class="pagination mt-3">
+      <button type="button" (click)="prevPage()" [disabled]="currentPage === 1"
+              class="btn btn-outline-primary me-2">⬅️ Précédent</button>
+      <span class="mx-3">Page {{ currentPage }} / {{ totalPages }}</span>
+      <button type="button" (click)="nextPage()" [disabled]="currentPage === totalPages"
+              class="btn btn-outline-primary ms-2">Suivant ➡️</button>
+    </div>
+
+    <!-- Bouton submit -->
+    <button type="submit" class="btn btn-success mt-3"
+            [disabled]="tourneeForm.invalid || selectedLivraisons.length === 0">
+      ➕ Créer la tournée ({{ selectedLivraisons.length }} livraison(s))
+    </button>
+
+    <div *ngIf="loading" class="mt-2 text-primary">Création en cours...</div>
+  </form>
+</div>

@@ -21,9 +21,19 @@ public class JwtUtils {
     private long expirationTime;
 
     // ✅ Generates token and embeds role
-    public String generateToken(String username, String role) {
+    public String generateToken(String username, String role,Long idUser,String adresse,String email,String phonenumber,float frais_retour,String photo) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", role); // make sure this gets included
+
+        claims.put("role", role);
+        claims.put("idUser",idUser);
+        claims.put("adresse",adresse);
+        claims.put("email",email);
+        claims.put("phoneNumber",phonenumber);
+        claims.put("frais_retour",frais_retour);
+        claims.put("photo",photo);
+
+
+        // make sure this gets included
         return createToken(claims, username);
     }
 
@@ -70,4 +80,13 @@ public class JwtUtils {
     public boolean validateToken(String token, String username) {
         return username.equals(extractUsername(token)) && !isTokenExpired(token);
     }
+
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
+    }
+
+
+
+
 }
+

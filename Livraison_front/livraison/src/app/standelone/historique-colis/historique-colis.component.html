@@ -1,0 +1,24 @@
+<h2>📊 Historique des statuts</h2>
+
+<input type="text" [(ngModel)]="searchColisId" (input)="filter()" placeholder="Filtrer par ID colis">
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Colis</th>
+      <th>Statut</th>
+      <th>Date</th>
+      <th>Livreur</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let h of filtered">
+      <td>{{ h.id }}</td>
+      <td>{{ h.colisId }}</td>
+      <td>{{ h.statut_colis }}</td>
+      <td>{{ h.date | date:'short' }}</td>
+      <td>{{ h.utilisateur }}</td>
+    </tr>
+  </tbody>
+</table>

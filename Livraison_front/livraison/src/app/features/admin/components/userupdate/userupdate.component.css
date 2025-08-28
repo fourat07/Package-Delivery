@@ -1,0 +1,143 @@
+:root {
+  --bg: #f5f7fa;
+  --card: rgba(255, 255, 255, 0.65);
+  --blur: 16px;
+  --border: 1px solid rgba(255, 255, 255, 0.35);
+  --shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  --radius: 12px;
+  --primary: #6366f1;
+  --text: #334155;
+  --error: #ef4444;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.glass-modal {
+  background: var(--card);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(var(--blur));
+  padding: 2rem;
+  width: 100%;
+  max-width: 420px;
+  animation: slideDown 0.25s ease-out;
+}
+
+.glass-modal h2 {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+}
+
+.glass-modal label {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.glass-modal input,
+.glass-modal select {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  border: var(--border);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.glass-modal input:focus,
+.glass-modal select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.glass-modal input.error,
+.glass-modal select.error {
+  border-color: var(--error) !important;
+}
+
+.error-container small.error {
+  color: var(--error);
+  font-size: 0.75rem;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+footer {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: darken(#6366f1, 10%);
+}
+
+.btn-primary:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.btn-outline {
+  background: transparent;
+  border: var(--border);
+  color: var(--text);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-60px) scale(.95); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@media (max-width: 480px) {
+  .glass-modal {
+    padding: 1.5rem;
+    margin: 0 1rem;
+  }
+  
+  footer {
+    flex-direction: column-reverse;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}

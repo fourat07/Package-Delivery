@@ -7,7 +7,7 @@ import { UserService } from 'src/app/features/user/services/user/user.service';
 interface SidebarLink {
   label: string;
   icon: string;
-  route: string;
+  routes: string[];
   id: string;
   roles: string[]; // les rôles autorisés
 }
@@ -54,6 +54,8 @@ export class SidebarComponent implements OnInit {
      @Input() isCollapsed : boolean= false;
     userRole: string = '';
 
+
+
      
   
   isSidebarHidden = false;
@@ -65,11 +67,30 @@ export class SidebarComponent implements OnInit {
    activeLink : string = '';
 
  links: SidebarLink[] = [
-    { id: 'dashboard', label: 'Dashboard', icon: 'bxs-dashboard', route: '/dashboard', roles: ['ROLE_ADMIN', 'ROLE_CLIENT', 'ROLE_AGENT','ROLE_LIVREUR'] },
-    { id: 'store', label: 'My Store', icon: 'bxs-shopping-bag-alt', route: '/store', roles: ['ROLE_CLIENT'] },
+{ id: 'dashboard', label: 'Dashboard', icon: 'bxs-dashboard', routes: ['/dashboard'], roles: ['ROLE_ADMIN'] },
+
+{ id: 'utilisateur', label: 'Utilisateurs', icon: 'bxs-user', routes: ['/admin/list'], roles: ['ROLE_ADMIN'] },
+
+{ id: 'colis', label: 'Colis', icon: 'bxs-package', routes: ['/list-colis'], roles: ['ROLE_ADMIN','ROLE_EXPEDITEUR'] },
+{ id: 'livraison', label: 'Livraison', icon: 'bxs-truck', routes: ['/list-livraison'], roles: ['ROLE_ADMIN','ROLE_EXPEDITEUR'] },
+
+
+{ id: 'tournée', label: 'Tournées & Pickups  ', icon: 'bxs-truck', routes: ['/list-tournee'], roles: ['ROLE_ADMIN','ROLE_LIVREUR'] },
+
+/* { id: 'historique_tournées', label: 'Historique tournées', icon: 'bxs-time', routes: ['/create-tournee'], roles: ['ROLE_ADMIN','ROLE_LIVREUR']  },
+
+{ id: 'historique_colis', label: 'Historique Colis', icon: 'bxs-time', routes: ['/create'], roles: ['ROLE_ADMIN','ROLE_EXPEDITEUR','ROLE_AGENT'] }, */
+
+{ id: 'reclamation', label: 'Réclamations', icon: 'bxs-message-alt-error', routes: ['/list-reclamation'], roles: ['ROLE_ADMIN','ROLE_EXPEDITEUR','ROLE_AGENT'] }
+
+
+
+
+
+   /*  { id: 'store', label: 'My Store', icon: 'bxs-shopping-bag-alt', route: '/store', roles: ['ROLE_CLIENT'] },
     { id: 'analytics', label: 'Analytics', icon: 'bxs-doughnut-chart', route: '/analytics', roles: ['ROLE_ADMIN'] },
     { id: 'messages', label: 'Messages', icon: 'bxs-message-dots', route: '/messages', roles: ['ROLE_ADMIN', 'ROLE_AGENT'] },
-    { id: 'team', label: 'Team', icon: 'bxs-group', route: '/team', roles: ['ROLE_ADMIN'] }
+    { id: 'team', label: 'Team', icon: 'bxs-group', route: '/team', roles: ['ROLE_ADMIN'] } */
   ];
 
 
@@ -95,7 +116,7 @@ get currentState() {
 
    onLogout() {
     this.userService.logout();
-    this.router.navigate(['user/login']);
+    
     
   }
 
@@ -106,13 +127,15 @@ get currentState() {
 
   ngOnInit() {
     this.checkScreenSize();
+    const user = this.userService.getCurrentUser();
+     
      this.userRole = this.userService.getUserRole() ?? '';
 
   }
 
   checkScreenSize() {
 const width = window.innerWidth;
-  this.isMobile = width <= 768;
+  this.isMobile = width <= 1250;
   this.isCollapsed = this.isMobile; // collapse by default on mobile
 }
 

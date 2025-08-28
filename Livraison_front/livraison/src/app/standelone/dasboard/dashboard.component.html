@@ -1,0 +1,77 @@
+<div class="dashboard-container container-fluid">
+
+  <!-- === Top Stats Cards === -->
+  <div class="row mb-4">
+    <div class="col-md-3" *ngIf="globalStats">
+      <div class="stat-card bg-primary text-white">
+        <h6>Total Colis</h6>
+        <h3>{{ globalStats.totalColis }}</h3>
+      </div>
+    </div>
+    <div class="col-md-3" *ngIf="globalStats">
+      <div class="stat-card bg-success text-white">
+        <h6>Total Livraisons</h6>
+        <h3>{{ globalStats.totalLivraisons }}</h3>
+      </div>
+    </div>
+    <div class="col-md-3" *ngIf="globalStats">
+      <div class="stat-card bg-warning text-white">
+        <h6>Total Tournées</h6>
+        <h3>{{ globalStats.totalTournees }}</h3>
+      </div>
+    </div>
+
+       <div class="col-md-3" *ngIf="globalStats">
+      <div class="stat-card bg-warning text-white">
+        <h6>Total Réclamations</h6>
+        <h3>{{ reclamationsStats.length || 0 }}</h3>
+      </div>
+    </div>
+  </div>
+    <div class="col-md-3">
+      <div class="stat-card bg-info text-white">
+        <h6>Taux Réussite Global</h6>
+        <h3>{{ tauxReussite }} %</h3>
+      </div>
+    </div>
+
+  
+
+  <!-- === Charts Section === -->
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <h5 class="text-center">Colis</h5>
+      <canvas baseChart [data]="colisChartData" [type]="colisChartType" [options]="colisChartOptions"></canvas>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <h5 class="text-center">Livraisons</h5>
+      <canvas baseChart [data]="livraisonChartData" [type]="livraisonChartType" [options]="livraisonChartOptions"></canvas>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <h5 class="text-center">Tournées</h5>
+      <canvas baseChart [data]="tourneeChartData" [type]="tourneeChartType" [options]="tourneeChartOptions"></canvas>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <h5 class="text-center">Utilisateurs par rôle</h5>
+      <canvas baseChart [data]="userRoleChartData" [type]="userRoleChartType" [options]="userRoleChartOptions"></canvas>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <h5 class="text-center">Taux de Réussite par Livreur</h5>
+      <canvas baseChart [data]="tauxReussiteChartData" [type]="tauxReussiteChartType" [options]="tauxReussiteChartOptions"></canvas>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <h5 class="text-center">Recettes par Jour</h5>
+      <canvas baseChart [data]="recettesChartData" [type]="recettesChartType" [options]="recettesChartOptions"></canvas>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <h5 class="text-center">Réclamations</h5>
+      <canvas baseChart [data]="reclamationsChartData" [type]="reclamationsChartType" [options]="reclamationsChartOptions"></canvas>
+    </div>
+  </div>
+</div>

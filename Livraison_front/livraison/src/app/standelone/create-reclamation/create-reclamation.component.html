@@ -1,0 +1,46 @@
+<h3>Créer une réclamation</h3>
+
+<form (ngSubmit)="createReclamation()" #reclamationForm="ngForm" novalidate>
+  <!-- Champ titre -->
+  <div>
+    <label for="titre">Titre :</label>
+    <input
+      type="text"
+      id="titre"
+      name="titre"
+      [(ngModel)]="newReclamation.titre"
+      required
+      minlength="3"
+      #titre="ngModel"
+    />
+    <!-- Validation visuelle -->
+    <div *ngIf="titre.invalid && (titre.dirty || titre.touched)" class="error">
+      <small *ngIf="titre.errors?.['required']">⚠️ Le titre est obligatoire.</small>
+      <small *ngIf="titre.errors?.['minlength']">⚠️ Le titre doit contenir au moins 3 caractères.</small>
+    </div>
+  </div>
+
+  <!-- Champ description -->
+  <div>
+    <label for="description">Description :</label>
+    <textarea
+      id="description"
+      name="description"
+      [(ngModel)]="newReclamation.description"
+      required
+      minlength="5"
+      #description="ngModel"
+    ></textarea>
+    <!-- Validation visuelle -->
+    <div *ngIf="description.invalid && (description.dirty || description.touched)" class="error">
+      <small *ngIf="description.errors?.['required']">⚠️ La description est obligatoire.</small>
+      <small *ngIf="description.errors?.['minlength']">⚠️ La description doit contenir au moins 5 caractères.</small>
+    </div>
+  </div>
+
+  <!-- Boutons -->
+  <div class="buttons">
+    <button type="submit" [disabled]="!reclamationForm.form.valid">Créer</button>
+    <button type="button" (click)="cancel()">Annuler</button>
+  </div>
+</form>

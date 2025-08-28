@@ -1,0 +1,74 @@
+<div *ngIf="loading">Chargement des tournées...</div>
+
+<!-- Barre de filtres -->
+<div class="filters mb-3">
+  <label class="ms-3">Status:</label>
+  <select [(ngModel)]="filterStatus" (ngModelChange)="applyFilters()" class="form-select w-auto d-inline-block">
+    <option value="">Tous</option>
+    <option *ngFor="let s of uniqueStatuses" [value]="s">{{ s }}</option>
+  </select>
+<div class="filters mb-3">
+  <input 
+    type="text" 
+    [(ngModel)]="globalSearch" 
+    (ngModelChange)="applyFilters()" 
+    placeholder="🔍 Rechercher (statut, livreur, adresse...)" 
+    class="form-control w-50 d-inline-block">
+</div>
+
+
+
+<label class="ms-3" *ngIf="currentUserRole=== 'ROEL_ADMIN'" >Livreur:</label>
+  <select [(ngModel)]="filterUsername" (ngModelChange)="applyFilters()" class="form-select w-auto d-inline-block">
+    <option value="">Tous</option>
+    <option *ngFor="let l of uniqueLivreurs" [value]="l">{{ l }}</option>
+  </select>
+
+  <label class="ms-3">Date:</label>
+  <input type="date" [(ngModel)]="filterDate" (ngModelChange)="applyFilters()" class="form-control w-auto d-inline-block">
+</div>
+    <button (click)="toggleSortDate()" class="btn btn-outline-primary ms-3">
+    Trier par date {{ sortDirection === 'asc' ? '↑' : '↓' }}
+  </button>
+
+  <!-- 📷 Scanner -->
+<button *ngIf="currentUserRole ===  'ROLE_LIVREUR'"    (click)="toggleScanner()">📷 Scan</button>
+<app-scanner *ngIf="showScanner"></app-scanner>
+<!-- Tableau -->
+<div *ngIf="!loading && filteredTournees.length">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Date Pickup</th>
+        <th>Adresse Pickup</th>
+        <th *ngIf="currentUserRole=== 'ROLE_ADMIN' " >Livreur</th>
+        <th>Livraisons</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of paginatedTournees">
+        <td>{{ t.status }}</td>
+        <td>{{ t.datePickup | date:'dd MMM yyyy HH:mm' }}</td>
+        <td >{{ t.livreur.adresse }}</td>
+        <td *ngIf="currentUserRole=== 'ROLE_ADMIN'">{{ t.livreur.username }}</td>
+        <td>{{ t.livraisonsCount }}</td>
+        <td>
+          <button (click)="viewTournee(t.id)" class="btn btn-primary btn-sm">Voir Historique</button>
+          <button *ngIf="currentUserRole === 'ROLE_ADMIN'" (click)="deleteTournee(t.id)" class="btn btn-danger btn-sm">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+<div class="pagination mt-3">
+  <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">⬅️ Précédent</button>
+  <span class="page-info">Page {{ currentPage }} / {{ totalPages }}</span>
+  <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">Suivant ➡️</button>
+</div>
+
+<div *ngIf="!loading && !filteredTournees.length" class="alert alert-info">
+  Aucune tournée trouvée.
+</div>

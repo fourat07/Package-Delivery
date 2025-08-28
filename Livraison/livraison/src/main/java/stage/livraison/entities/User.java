@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,14 +22,27 @@ public class User {
     public String username;
     public String email;
     public String adresse;
-    public String password;
+    public float frais_retour;
     public String phoneNumber;
+
+    public String password;
+    public String photo;
 
     @Enumerated(EnumType.STRING)
     public Role role;
 
-    @Enumerated(EnumType.STRING)
-    public Tarification tarification;
+    @OneToMany
+    private List<Colis>colisList ;
+
+    private boolean disponible;
+
+    @Transient
+    private Long nbReclamationsAssignees;
+
+
+
+
+
 
 
 

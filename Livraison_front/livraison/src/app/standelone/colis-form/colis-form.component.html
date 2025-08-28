@@ -1,0 +1,75 @@
+<div class="container">
+  <h2>{{ isEditMode ? 'Modifier le colis' : 'Créer un nouveau colis' }}</h2>
+
+  <form [formGroup]="colisForm" (ngSubmit)="onSubmit()">
+
+    <!-- Adresse -->
+    <div class="mb-3">
+      <label>Adresse</label>
+      <input type="text" formControlName="adresse" class="form-control"
+             [ngClass]="{'is-invalid': f['adresse'].touched && f['adresse'].invalid}">
+      <div *ngIf="f['adresse'].touched && f['adresse'].invalid" class="invalid-feedback">
+        <div *ngIf="f['adresse'].errors?.['required']">L’adresse est obligatoire.</div>
+        <div *ngIf="f['adresse'].errors?.['minlength']">Minimum 5 caractères.</div>
+      </div>
+    </div>
+
+    <!-- Téléphone -->
+    <div class="mb-3">
+      <label>Téléphone</label>
+      <input type="text" formControlName="telephone" class="form-control"
+             [ngClass]="{'is-invalid': f['telephone'].touched && f['telephone'].invalid}">
+      <div *ngIf="f['telephone'].touched && f['telephone'].invalid" class="invalid-feedback">
+        <div *ngIf="f['telephone'].errors?.['required']">Le téléphone est obligatoire.</div>
+        <div *ngIf="f['telephone'].errors?.['pattern']">Doit contenir exactement 8 chiffres.</div>
+      </div>
+    </div>
+
+    <!-- Prix -->
+    <div class="mb-3">
+      <label>Prix</label>
+      <input type="number" formControlName="prix" class="form-control"
+             [ngClass]="{'is-invalid': f['prix'].touched && f['prix'].invalid}">
+      <div *ngIf="f['prix'].touched && f['prix'].invalid" class="invalid-feedback">
+        <div *ngIf="f['prix'].errors?.['required']">Le prix est obligatoire.</div>
+        <div *ngIf="f['prix'].errors?.['min']">Le prix doit être supérieur à 0.</div>
+      </div>
+    </div>
+
+    <!-- Paiement -->
+    <div class="mb-3">
+      <label>Paiement</label>
+      <select formControlName="paiement" class="form-control"
+              [ngClass]="{'is-invalid': f['paiement'].touched && f['paiement'].invalid}">
+        <option value="">-- Sélectionnez --</option>
+        <option *ngFor="let p of paiementList" [value]="p">{{ p }}</option>
+      </select>
+      <div *ngIf="f['paiement'].touched && f['paiement'].invalid" class="invalid-feedback">
+        <div *ngIf="f['paiement'].errors?.['required']">Le mode de paiement est obligatoire.</div>
+      </div>
+    </div>
+
+    <!-- Nombre d'articles -->
+    <div class="mb-3">
+      <label>Nombre d'articles</label>
+      <input type="number" formControlName="nbArticle" class="form-control"
+             [ngClass]="{'is-invalid': f['nbArticle'].touched && f['nbArticle'].invalid}">
+      <div *ngIf="f['nbArticle'].touched && f['nbArticle'].invalid" class="invalid-feedback">
+        <div *ngIf="f['nbArticle'].errors?.['required']">Le nombre d’articles est obligatoire.</div>
+        <div *ngIf="f['nbArticle'].errors?.['min']">Doit être au moins 1.</div>
+      </div>
+    </div>
+
+    <!-- Remarque -->
+    <div class="mb-3">
+      <label>Remarque</label>
+      <textarea formControlName="remarque" class="form-control"></textarea>
+    </div>
+
+    <!-- Boutons -->
+    <button type="submit" class="btn btn-success" [disabled]="colisForm.invalid">
+      {{ isEditMode ? 'Mettre à jour' : 'Créer' }}
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="router.navigate(['/list-colis'])">Annuler</button>
+  </form>
+</div>

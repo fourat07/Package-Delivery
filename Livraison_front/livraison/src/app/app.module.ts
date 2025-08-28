@@ -17,6 +17,12 @@ import { CommonModule } from '@angular/common';
 
 import { MatBadgeModule } from '@angular/material/badge';
 import { SharedModule } from "./shared/shared.module";
+import { UserProfileComponent } from "./standelone/profile/user-profile.component";
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { FormsModule } from '@angular/forms';
+import { UserModule } from './features/user/user.module';
+import { NgChartsModule } from 'ng2-charts';
+
 
 
 
@@ -38,7 +44,14 @@ import { SharedModule } from "./shared/shared.module";
     NoopAnimationsModule,
     MatIconModule,
     MatBadgeModule,
-    SharedModule
+    SharedModule,
+    UserProfileComponent,
+    ZXingScannerModule,
+    FormsModule,
+    NgChartsModule,
+    
+    
+
 ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]

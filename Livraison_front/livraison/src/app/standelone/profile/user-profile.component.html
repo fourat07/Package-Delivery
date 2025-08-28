@@ -1,0 +1,180 @@
+<div class="profile-container">
+  <!-- Header -->
+  <div class="profile-header">
+    <h1>Mon Profil</h1>
+    <p>Gérez vos informations personnelles</p>
+  </div>
+
+  <div class="profile-content">
+    <!-- Left Column - Photo -->
+    <div class="photo-section">
+      <div class="avatar-container">
+        <img [src]="photoUrl" alt="Photo de profil" (error)="handleImageError($event)" class="profile-avatar" />
+        <label for="avatar-upload" class="upload-overlay">
+          <i class="fas fa-camera"></i>
+        </label>
+        <input type="file" id="avatar-upload" accept="image/*" hidden (change)="onFileSelected($event)">
+      </div>
+
+      <h2>{{ model.username }}</h2>
+
+      <button class="edit-btn" (click)="editMode = !editMode">
+        {{ editMode ? 'Annuler' : 'Modifier' }}
+      </button>
+
+      <button *ngIf="previewUrl" class="save-btn" (click)="uploadPhoto()" [disabled]="isLoading">
+        {{ isLoading ? 'Téléversement...' : 'Enregistrer la photo' }}
+      </button>
+    </div>
+
+    <!-- Right Column - Info -->
+    <div class="info-section">
+      <!-- Edit Mode -->
+      <form *ngIf="editMode; else viewMode" #profileForm="ngForm" (ngSubmit)="save(profileForm)" novalidate>
+
+        <!-- USERNAME (display only) -->
+        <div class="info-item">
+          <span class="label">Username:</span>
+          <span class="value">{{ model.username || 'Non renseigné' }}</span>
+        </div>
+
+        <!-- EMAIL -->
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email"
+                 name="email"
+                 required
+                 [(ngModel)]="model.email"
+                 #email="ngModel"
+                 (blur)="email.control.markAsTouched()"
+                 [class.error]="email.invalid && (email.dirty || email.touched)">
+          <div class="error-container">
+            <small class="error" *ngIf="email.touched && email.errors?.['required']">Requis.</small>
+            <small class="error" *ngIf="email.touched && email.errors?.['email']">Email invalide.</small>
+          </div>
+        </div>
+
+        <!-- PHONE -->
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input type="tel"
+       name="phoneNumber"
+       required
+       pattern="^[0-9 +\-]{7,15}$"
+       [(ngModel)]="model.phoneNumber"
+       #phone="ngModel"
+       (blur)="phone.control.markAsTouched()"
+       [class.error]="phone.invalid && (phone.dirty || phone.touched)">
+          <div class="error-container">
+
+            <small class="error" *ngIf="phone.touched && phone.errors?.['required']">Requis.</small>
+            <small class="error" *ngIf="phone.touched && phone.errors?.['pattern']">Format invalide (7-15 chiffres).</small>
+          </div>
+        </div>
+
+        <!-- ADRESSE -->
+        <div class="form-group">
+          <label>Adresse *</label>
+          <textarea name="adresse"
+                    required
+                    [(ngModel)]="model.adresse"
+                    #address="ngModel"
+                    (blur)="address.control.markAsTouched()"
+                    [class.error]="address.invalid && (address.dirty || address.touched)"></textarea>
+          <div class="error-container">
+            <small class="error" *ngIf="address.touched && address.errors?.['required']">Requis.</small>
+          </div>
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <button type="submit" 
+                class="save-btn" 
+                [disabled]="profileForm.invalid || isLoading">
+          {{ isLoading ? 'Enregistrement...' : 'Enregistrer' }}
+        </button>
+      </form>
+
+      <!-- View Mode -->
+      <ng-template #viewMode>
+        <div class="info-card">
+          <div class="info-item">
+            <span class="label">Username:</span>
+            <span class="value">{{ model.username || 'Non renseigné' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Email:</span>
+            <span class="value">{{ model.email || 'Non renseigné' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Téléphone:</span>
+            <span class="value">{{ model.phoneNumber || 'Non renseigné' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Adresse:</span>
+            <span class="value">{{ model.adresse || 'Non renseignée' }}</span>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- Password Change -->
+      <div class="password-section">
+        <h3>Changer le mot de passe</h3>
+        <form #passwordForm="ngForm" (ngSubmit)="changePassword()">
+
+          <!-- OLD PASSWORD -->
+          <div class="form-group">
+            <label>Ancien mot de passe</label>
+            <input type="password"
+                   [(ngModel)]="passwordData.oldPassword"
+                   name="oldPassword"
+                   required
+                   #oldPassword="ngModel"
+                   (blur)="oldPassword.control.markAsTouched()"
+                   [class.error]="oldPassword.invalid && (oldPassword.dirty || oldPassword.touched)">
+            <div class="error-container">
+              <small class="error" *ngIf="oldPassword.touched && oldPassword.errors?.['required']">Ce champ est requis</small>
+            </div>
+          </div>
+
+          <!-- NEW PASSWORD -->
+          <div class="form-group">
+            <label>Nouveau mot de passe</label>
+            <input type="password"
+                   [(ngModel)]="passwordData.newPassword"
+                   name="newPassword"
+                   required minlength="8"
+                   #newPassword="ngModel"
+                   (blur)="newPassword.control.markAsTouched()"
+                   [class.error]="newPassword.invalid && (newPassword.dirty || newPassword.touched)">
+            <div class="error-container">
+              <small class="error" *ngIf="newPassword.touched && newPassword.errors?.['required']">Ce champ est requis</small>
+              <small class="error" *ngIf="newPassword.touched && newPassword.errors?.['minlength']">Minimum 8 caractères</small>
+            </div>
+          </div>
+
+          <!-- CONFIRM PASSWORD -->
+          <div class="form-group">
+            <label>Confirmer mot de passe</label>
+            <input type="password"
+                   [(ngModel)]="passwordData.confirmPassword"
+                   name="confirmPassword"
+                   required
+                   #confirmPassword="ngModel"
+                   (blur)="confirmPassword.control.markAsTouched()"
+                   [class.error]="(confirmPassword.touched && confirmPassword.invalid) || (passwordData.newPassword !== passwordData.confirmPassword && confirmPassword.touched)">
+            <div class="error-container">
+              <small class="error" *ngIf="confirmPassword.touched && confirmPassword.errors?.['required']">Ce champ est requis</small>
+              <small class="error" *ngIf="passwordData.newPassword !== passwordData.confirmPassword && confirmPassword.touched">Les mots de passe ne correspondent pas</small>
+            </div>
+          </div>
+
+          <button type="submit" class="save-btn"
+                  [disabled]="passwordForm.invalid || isLoading || (passwordData.newPassword !== passwordData.confirmPassword)">
+            {{ isLoading ? 'Updating...' : 'Mettre à jour' }}
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

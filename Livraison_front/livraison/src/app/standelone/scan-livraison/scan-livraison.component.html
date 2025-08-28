@@ -1,0 +1,54 @@
+<div *ngIf="loading" class="loading">
+  Chargement de la livraison...
+</div>
+
+<!-- 📦 Détails livraison -->
+<div *ngIf="!loading">
+  <h2>Livraison #{{livraisonId}} — {{ list.length }} colis</h2>
+
+  <!-- 🔹 Liste des colis -->
+  <div *ngFor="let colisId of colisIds" class="colis-block">
+
+    <!-- ✅ Détails du colis -->
+    <h3>Colis #{{colisId}} — Code-barres: {{colisDetails[colisId].codeBarre}}</h3>
+    <div class="colis-details">
+      <p><strong>Adresse :</strong> {{colisDetails[colisId].adresse}}</p>
+     <p><strong>Téléphone :</strong> {{colisDetails[colisId].telephone}}</p>
+<p><strong>Prix :</strong> {{colisDetails[colisId].prix | currency:'DT'}}</p>
+<p><strong>Paiement :</strong> {{colisDetails[colisId].paiement}}</p>
+<p><strong>Client :</strong> {{colisDetails[colisId].user.username}}</p>
+      
+      <p><strong>Frais de retour :</strong> {{colisDetails[colisId].frais_retour || 0 | currency:'DT'}}</p>
+    </div>
+
+    <!-- ✅ Trouver le bon colis dans list pour statut/commentaire -->
+    <div *ngFor="let c of list" >
+      <ng-container *ngIf="c.id === colisId">
+        <div class="card">
+          <div class="card-header">
+            <strong>Colis #{{c.id}}</strong> — {{c.code}}
+            <span class="statut"> | Statut actuel : <b>{{c.statut}}</b></span>
+          </div>
+
+          <div class="form-row">
+            <label>Changer statut :</label>
+            <select [(ngModel)]="c.statut">
+              <option *ngFor="let s of statuts" [value]="s" [disabled]="s === c.statut">{{s}}</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label>Commentaire :</label>
+            <textarea [(ngModel)]="c.commentaire" rows="2" cols="30"></textarea>
+          </div>
+
+          <div class="form-row actions">
+            <button (click)="save(c)">💾 Enregistrer</button>
+            <span *ngIf="c._saved" class="saved">✅ Sauvegardé</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+  </div>
+</div>

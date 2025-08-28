@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UserService } from '../../services/user/user.service';
 import { Router } from '@angular/router';
@@ -6,9 +6,10 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  //encapsulation: ViewEncapsulation.ShadowDom
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   credentials = {
     username: '',
     password: ''
@@ -19,6 +20,8 @@ export class LoginComponent {
   loginError = '';
 
   constructor(private authService: UserService, private router: Router) {}
+  ngOnInit(): void {
+  }
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
@@ -32,46 +35,50 @@ export class LoginComponent {
     return this.showPassword ? 'icon-eye-off' : 'icon-eye';
   }
 
-  onSubmit(form: NgForm) {
-    if (form.invalid) return;
+onSubmit(form: NgForm) {
+  if (form.invalid) return;
 
-    this.isLoading = true;
-    this.loginError = '';
+  this.isLoading = true;
+  this.loginError = '';
 
-    this.authService.login(this.credentials).subscribe({
-      next: (response) => {
-        const token = response.token;
-        localStorage.setItem('auth_token', token);
-        this.redirectBasedOnRole(this.parseJwt(token)?.role);
-      },
-      error: (error) => {
-        this.loginError = 'Invalid username or password';
-        this.isLoading = false;
+  this.authService.login(this.credentials).subscribe({
+    next: (response) => {
+      const token = response.token;
+
+      if (token) {
+        const role = this.parseJwt(token)?.role;
+        this.redirectBasedOnRole(role); // ✅ une seule méthode
       }
-    });
-  }
-
-  private redirectBasedOnRole(role: string) {
-    switch (role) {
-      case 'ROLE_ADMIN':
-        this.router.navigate(['/admin']);
-        break;
-      case 'ROLE_LIVREUR':
-        this.router.navigate(['/livreur']);
-        break;
-        case 'ROLE_AGENT':
-        this.router.navigate(['/agent']);
-        break;
-        case 'ROLE_EXPEDITEUR':
-        this.router.navigate(['/expediteur']);
-        break;
-        case 'ROLE_COMPTABLE':
-        this.router.navigate(['/comptable']);
-        break;
-      default:
-        this.router.navigate(['/dashboard']);
+    },
+    error: () => {
+      this.loginError = 'Invalid username or password';
+      this.isLoading = false;
     }
+  });
+}
+
+private redirectBasedOnRole(role: string) {
+  switch (role) {
+    case 'ROLE_ADMIN':
+      this.router.navigate(['/dashboard']); // admin
+      break;
+    case 'ROLE_LIVREUR':
+      this.router.navigate(['/list-tournee']); // livreur
+      break;
+    case 'ROLE_AGENT':
+      this.router.navigate(['/list-reclamation']); // agent
+      break;
+    case 'ROLE_EXPEDITEUR':
+      this.router.navigate(['/list-colis']); // expediteur
+      break;
+    case 'ROLE_COMPTABLE':
+      this.router.navigate(['/comptable']); // comptable
+      break;
+    default:
+      this.router.navigate(['/']); // fallback -> home ou login
   }
+}
+
 
   private parseJwt(token: string): any {
     try {

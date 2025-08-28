@@ -1,0 +1,81 @@
+<div class="user-details-container">
+  <!-- Chargement -->
+  <div *ngIf="isLoading" class="loading-spinner">
+    <i class="fas fa-spinner fa-spin"></i>
+  </div>
+
+  <!-- Erreur -->
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- Profil Utilisateur -->
+  <div *ngIf="user && !isLoading" class="user-profile">
+    <!-- En-tête -->
+    <div class="profile-header">
+      <div class="avatar-container">
+<img [src]="user.photo ? 'http://localhost:8081/user/uploads/profile_photos/' + user.photo : 'assets/images/default.png'" alt="">   
+      </div>
+      <div class="profile-titles">
+        <h1>{{ user.username }}</h1>
+        <span class="user-role" [ngClass]="'role-' + user.role.toLowerCase()">
+          {{ user.role.replace('ROLE_', '') }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Détails -->
+    <div class="profile-content">
+      <div class="detail-section">
+        <div class="detail-item">
+          <i class="fas fa-envelope"></i>
+          <div class="detail-text">
+            <span class="detail-label">Email</span>
+            <span class="detail-value">{{ user.email }}</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <i class="fas fa-phone"></i>
+          <div class="detail-text">
+            <span class="detail-label">Téléphone</span>
+            <span class="detail-value">{{ user.phoneNumber || 'Non fourni' }}</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <div class="detail-text">
+            <span class="detail-label">Adresse</span>
+            <span class="detail-value">{{ user.adresse || 'Non fournie' }}</span>
+          </div>
+        </div>
+
+
+
+<div *ngIf="user.frais_retour && user.frais_retour > 0" class="detail-item">
+  <i class="fas fa-map-marker-alt"></i>
+  <div class="detail-text">
+    <span class="detail-label">Frais Retour</span>
+    <span class="detail-value">{{ user.frais_retour }}</span>
+  </div>
+</div>
+
+
+
+      </div>
+    </div>
+    
+
+
+    <!-- Actions -->
+    <div class="profile-actions">
+      <button class="btn edit-btn" (click)="editUser()">
+        <i class="fas fa-edit"></i> Modifier
+      </button>
+      <button class="btn back-btn" routerLink="/admin/list">
+        <i class="fas fa-arrow-left"></i> Retour
+      </button>
+    </div>
+  </div>
+</div>

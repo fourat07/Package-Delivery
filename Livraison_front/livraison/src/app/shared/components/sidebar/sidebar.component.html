@@ -16,7 +16,7 @@
   <ul class="side-menu top">
 <ng-container *ngFor="let link of links">
   <li *ngIf="link.roles.includes(userRole)" [class.active]="activeLink === link.id">
-    <a [routerLink]="link.route" (click)="setActive(link.id)">
+    <a [routerLink]="link.routes" (click)="setActive(link.id)">
       <i class="bx" [ngClass]="link.icon"></i>
       <span class="text">{{ link.label }}</span>
     </a>
@@ -38,7 +38,7 @@
       </a>
     </li>
     <li>
-      <a href="#" class="logout" (click)="onLogout()">
+      <a class="logout" (click)="onLogout()">
         <i class='bx bxs-log-out-circle'></i>
         <span class="text">Logout</span>
       </a>

@@ -1,0 +1,105 @@
+<div class="container">
+  <h2>Liste des colis</h2>
+
+  <!-- Boutons d’action -->
+  <button routerLink="/add-colis" class="btn btn-primary mb-3">➕ Nouveau colis</button>
+
+  <button (click)="createLivraison()" class="btn btn-success mb-3" [disabled]="selectedColis.length === 0">
+    🚚 Créer Livraison Globale ({{ selectedColis.length }} colis)
+  </button>
+<div *ngIf="successMessage" class="alert alert-success text-center">
+  {{ successMessage }}
+</div>
+
+  <!-- Filtres -->
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <input type="text" class="form-control" [(ngModel)]="searchTerm"
+             placeholder="🔍 Recherche (adresse, code-barre, téléphone)">
+    </div>
+    <div class="col-md-4" *ngIf="currentUserRole === 'ROLE_ADMIN'">
+      <select class="form-control" [(ngModel)]="filterUsername" (change)="goToPage(1)">
+        <option value="">-- Tous les clients --</option>
+        <option *ngFor="let user of uniqueUsernames" [value]="user">{{ user }}</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <select class="form-control" [(ngModel)]="filterPaiement" (change)="goToPage(1)">
+        <option value="">-- Tous les paiements --</option>
+        <option *ngFor="let p of paiements" [value]="p">{{ p }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Table des colis -->
+  <div *ngIf="loading">Chargement...</div>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <table class="table table-striped" *ngIf="filteredColis.length > 0">
+    <thead>
+      <tr>
+        <th>Sélection</th>
+        <th>Code-barre</th>
+        <th>Adresse</th>
+        <th>Téléphone</th>
+        <th>Prix</th>
+        <th>Paiement</th>
+
+         <th>Statut</th> 
+        <th  *ngIf="currentUserRole === 'ROLE_ADMIN'  " >Client</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let colis of paginatedColis">
+        <td>
+<input 
+  type="checkbox" 
+  [checked]="selectedColis.includes(colis.id!)"
+  (change)="toggleSelection(colis.id!, $event)">
+        </td>
+        <td>{{ colis.codeBarre }}</td>
+        <td>{{ colis.adresse }}</td>
+        <td>{{ colis.telephone }}</td>
+        <td>{{ colis.prix | currency:'DT' }}</td>
+        <td>{{ colis.paiement }}</td>
+         <td>{{ colis.statut_colis }}</td> 
+        <td  *ngIf="currentUserRole === 'ROLE_ADMIN' " >{{ colis.user.username }}</td>
+        <td>
+          <button [routerLink]="['/edit-colis', colis.id]" class="btn btn-warning btn-sm">✏️</button>
+          <button (click)="deleteColis(colis.id!)" class="btn btn-danger btn-sm">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Message si vide -->
+  <div *ngIf="!loading && filteredColis.length === 0" class="alert alert-info">
+    Aucun colis trouvé.
+  </div>
+
+
+  <div class="pagination mt-3">
+  <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">⬅️ Précédent</button>
+  <span>Page {{ currentPage }} / {{ totalPages }}</span>
+  <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">Suivant ➡️</button>
+</div>
+
+<!--   
+  <nav *ngIf="totalPages > 1" aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="goToPage(currentPage - 1)">Précédent</button>
+      </li>
+
+      <li class="page-item" *ngFor="let p of pagesArray"
+          [class.active]="currentPage === p">
+        <button class="page-link" (click)="goToPage(p)">{{ p }}</button>
+      </li>
+
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="goToPage(currentPage + 1)">Suivant</button>
+      </li>
+    </ul>
+  </nav> -->
+</div>

@@ -1,0 +1,39 @@
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 10px 0;
+  background: #f9f9f9;
+}
+
+.card-header {
+  margin-bottom: 8px;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin: 6px 0;
+}
+
+.form-row label {
+  width: 120px;
+  font-weight: bold;
+}
+
+.form-row select,
+.form-row textarea {
+  flex: 1;
+  padding: 4px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.saved {
+  color: green;
+  font-weight: bold;
+}

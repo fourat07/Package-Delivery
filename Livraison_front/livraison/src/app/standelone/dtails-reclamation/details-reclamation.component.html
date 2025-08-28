@@ -1,0 +1,51 @@
+<h2>Détails Réclamation #{{ reclamationId }}</h2>
+
+<div class="reclamation-details">
+  <p><strong>Titre :</strong> {{ reclamation?.titre }}</p>
+  <p><strong>Description :</strong> {{ reclamation?.description }}</p>
+  <p><strong>Statut :</strong> {{ reclamation?.statut }}</p>
+  <p><strong>Date création :</strong> {{ reclamation?.dateCreation | date:'dd/MM/yyyy HH:mm' }}</p>
+  <p><strong>Agent attribué :</strong> {{ reclamation?.agentAttribue?.username || 'Non assigné' }}</p>
+</div>
+
+<hr />
+
+<!-- 💬 Chat -->
+<div #chatContainer class="chat-box">
+  <div *ngFor="let c of commentaires" 
+     class="comment" 
+     [ngClass]="[getMessageClass(c), editingCommentId === c.id ? 'editing' : '']">
+  <div class="bubble">
+
+    <!-- Mode édition -->
+    <div *ngIf="editingCommentId === c.id">
+      <input [(ngModel)]="editedContent" />
+      <button (click)="saveEdit(c)">💾</button>
+      <button (click)="cancelEdit()">❌</button>
+    </div>
+
+    <!-- Mode lecture -->
+    <div *ngIf="editingCommentId !== c.id">
+      <strong>{{ c.auteur?.username }}</strong>
+      <small>({{ c.dateCreation | date:'dd/MM/yyyy HH:mm' }})</small>
+      <p>{{ c.contenu }}</p>
+    <button *ngIf="c.auteur?.idUser === currentUser.idUser"
+        class="edit-btn"
+        (click)="startEdit(c)">✏️ Modifier</button>
+
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+
+<!-- 📝 Zone d’envoi -->
+<div class="send-box" *ngIf="canSendMessage()">
+  <input [(ngModel)]="newMessage" placeholder="Écrire un message..." (keyup.enter)="sendMessage()" />
+  <button (click)="sendMessage()">Envoyer</button>
+</div>
+<div *ngIf="!canSendMessage()" class="info-message">
+  <p>Vous ne pouvez pas envoyer de messages pour cette réclamation.</p>
+</div>

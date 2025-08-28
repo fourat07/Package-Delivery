@@ -1,0 +1,136 @@
+<div class="modal-overlay" (click)="close.emit()">
+  <form class="glass-modal" #f="ngForm" (ngSubmit)="save(f)" (click)="$event.stopPropagation()">
+
+    <h2>{{ editing ? 'Modifier' : 'Ajouter' }} un utilisateur</h2>
+
+    <!-- NOM D'UTILISATEUR -->
+    <label>Nom d'utilisateur *
+      <input [(ngModel)]="model.username"
+             name="username"
+             required
+             minlength="3"
+             maxlength="30"
+             #uname="ngModel"
+             (blur)="uname.control.markAsTouched()"
+             [class.error]="uname.invalid && uname.touched">
+      <div class="error-container">
+        <small class="error" *ngIf="uname.touched && uname.errors?.['required']">Obligatoire.</small>
+        <small class="error" *ngIf="uname.touched && uname.errors?.['minlength']">Minimum 3 caractères.</small>
+      </div>
+    </label>
+
+    <!-- EMAIL -->
+    <label>Email *
+      <input type="email"
+             [(ngModel)]="model.email"
+             name="email"
+             required
+             email
+             #mail="ngModel"
+             (blur)="mail.control.markAsTouched()"
+             [class.error]="mail.invalid && mail.touched">
+      <div class="error-container">
+        <small class="error" *ngIf="mail.touched && mail.errors?.['required']">Obligatoire.</small>
+        <small class="error" *ngIf="mail.touched && mail.errors?.['email']">Email invalide.</small>
+      </div>
+    </label>
+
+    <!-- TÉLÉPHONE -->
+    <label>Téléphone
+      <input [(ngModel)]="model.phoneNumber"
+             name="phoneNumber"
+             pattern="^[0-9 +\-]{7,15}$"
+             #phone="ngModel"
+             (blur)="phone.control.markAsTouched()"
+             [class.error]="phone.invalid && phone.touched">
+      <div class="error-container">
+        <small class="error" *ngIf="phone.touched && phone.errors?.['pattern']">
+          Chiffres uniquement (7-15 caractères).
+        </small>
+      </div>
+    </label>
+
+    <!-- ADRESSE -->
+    <label>Adresse
+      <input [(ngModel)]="model.adresse" name="adresse">
+    </label>
+
+    <!-- RÔLE -->
+    <label>Rôle *
+      <select [(ngModel)]="model.role"
+              name="role"
+              required
+              #role="ngModel"
+              (change)="role.control.markAsTouched()"
+              [class.error]="role.invalid && role.touched">
+        <option value="">-- sélectionner --</option>
+        <option value="ROLE_ADMIN">Admin</option>
+        <option value="ROLE_AGENT">Agent</option>
+        <option value="ROLE_EXPEDITEUR">Expéditeur</option>
+        <option value="ROLE_LIVREUR">Livreur</option>
+      </select>
+      <div class="error-container">
+        <small class="error" *ngIf="role.touched && role.errors?.['required']">Obligatoire.</small>
+      </div>
+    </label>
+
+    <!-- FRAIS DE RETOUR -->
+    <label *ngIf="model.role === 'ROLE_EXPEDITEUR'">Frais de retour *
+      <input type="number"
+             [(ngModel)]="model.frais_retour"
+             name="frais_retour"
+             min="0"
+             step="0.01"
+             required
+             #fee="ngModel"
+             (blur)="fee.control.markAsTouched()"
+             [class.error]="fee.invalid && fee.touched">
+      <div class="error-container">
+        <small class="error" *ngIf="fee.touched && fee.errors?.['required']">Obligatoire.</small>
+        <small class="error" *ngIf="fee.touched && fee.errors?.['min']">Doit être supérieur ou égal à 0.</small>
+      </div>
+    </label>
+
+    <!-- MOT DE PASSE (uniquement lors de la création) -->
+    <ng-container *ngIf="!editing">
+      <label>Mot de passe *
+        <input type="password" 
+               name="password" 
+               [(ngModel)]="model.password"
+               required 
+               minlength="6" 
+               #pwd="ngModel"
+               (blur)="pwd.control.markAsTouched()"
+               [class.error]="pwd.invalid && pwd.touched">
+        <div class="error-container">
+          <small class="error" *ngIf="pwd.touched && pwd.errors?.['required']">Obligatoire.</small>
+          <small class="error" *ngIf="pwd.touched && pwd.errors?.['minlength']">Minimum 6 caractères.</small>
+        </div>
+      </label>
+
+      <label>Confirmer le mot de passe *
+        <input type="password" 
+               name="confirmPassword"
+               [(ngModel)]="confirmPassword"
+               required
+               #cpwd="ngModel"
+               (blur)="cpwd.control.markAsTouched()"
+               [class.error]="cpwd.touched && model.password !== confirmPassword">
+        <div class="error-container">
+          <small class="error" *ngIf="cpwd.touched && model.password !== confirmPassword">
+            Les mots de passe ne correspondent pas.
+          </small>
+        </div>
+      </label>
+    </ng-container>
+
+    <!-- ACTIONS -->
+    <footer>
+      <button type="button" class="btn btn-outline" (click)="close.emit()">Annuler</button>
+      <button type="submit" class="btn btn-primary"
+              [disabled]="f.invalid || (!editing && model.password !== confirmPassword)">
+        Enregistrer
+      </button>
+    </footer>
+  </form>
+</div>

@@ -1,0 +1,59 @@
+<h2>📦 Liste des livraisons</h2>
+
+<!-- 🔎 Recherche et filtres -->
+<div class="filters mb-3">
+  <input 
+  type="text" 
+  placeholder="🔎 Rechercher (référence, client, statut...)" 
+  [(ngModel)]="searchTerm" 
+  (input)="applyFilters()" 
+/>
+
+
+  <label>De : <input type="date" [(ngModel)]="fromDate" (change)="applyFilters()" /></label>
+  <label>À : <input type="date" [(ngModel)]="toDate" (change)="applyFilters()" /></label>
+
+  <button (click)="toggleSortOrder()">
+    Trier par date : {{ sortDirection === 'asc' ? '⬆️ Croissant' : '⬇️ Décroissant' }}
+  </button>
+</div>
+
+<!-- 📷 Scanner -->
+<button *ngIf="currentUserRole === 'ROLE_ADMIN' "    (click)="toggleScanner()">📷 Scan</button>
+<app-scanner *ngIf="showScanner"></app-scanner>
+
+<button *ngIf="currentUserRole === 'ROLE_ADMIN'  " (click)="createTournee()" class="btn btn-primary mb-3">➕ Nouvelle tournée</button>
+
+<!-- 📋 Tableau -->
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Référence</th>
+      <th>Nombre de colis</th>
+      <th>Date de création</th>
+      <th>Status</th>
+      <th *ngIf="currentUserRole === 'ROLE_ADMIN'" >Client</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let l of paginatedLivraisons">
+      <td>{{ l.reference }}</td>
+      <td>{{ l.colisCount }}</td>
+      <td>{{ l.dateCreation | date:'dd MMMM yyyy à HH:mm' }}</td>
+      <td> {{l.status}} </td>
+      <td>{{ l.user || 'N/A' }}</td>
+      <td>
+        <button (click)="voirHistorique(l.id)" class="btn btn-info btn-sm">Voir historique</button>
+        <button (click)="deleteLiv(l.id)" class="btn btn-danger btn-sm">🗑️</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Pagination -->
+<div class="pagination mt-3">
+  <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">⬅️ Précédent</button>
+  <span>Page {{ currentPage }} / {{ totalPages }}</span>
+  <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">Suivant ➡️</button>
+</div>

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/features/user/services/user/user.service';
 
 @Component({
@@ -9,6 +9,8 @@ import { UserService } from 'src/app/features/user/services/user/user.service';
 })
 export class TopbarComponent implements OnInit {
    @Output() sidebarToggled = new EventEmitter<void>(); // Renamed to avoid conflict
+   @Input() user: any;
+   
   isSearchExpanded = false;
 isCollapsed = false; // At the top of the class
 
@@ -18,25 +20,35 @@ isCollapsed = false; // At the top of the class
  isProfileDropdownOpen = false;
 
 isMobileView = false;
+  userid: any;
+  model: any = {};
+  isLoading = false;
+
+
+
 @Input() isSidebarOpen: boolean = false;
 
 
      constructor(
        private userService: UserService,
-       private router: Router
+       private route: ActivatedRoute
      ) {}
 
   @HostListener('window:resize', ['$event'])
   checkScreenSize(event?: Event) {
-    this.isMobileView = window.innerWidth <= 769;
+    this.isMobileView = window.innerWidth <= 1250;
   }
 
      ngOnInit() {
     this.checkScreenSize();  // Initialize mobile detection
+      console.log('User photo:', this.userService.getCurrentUser()?.photo); // Debug log
+
+ 
   }
   
   toggleProfileDropdown() {
     this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
+    console.log('dropdown toggled:', this.isProfileDropdownOpen); // Debug log
   }
   toggleSidebar() {
     this.sidebarToggled.emit();
@@ -56,10 +68,27 @@ isMobileView = false;
   }
    onLogout() {
     this.userService.logout();
-    this.router.navigate(['user/login']);
+    
     this.isProfileDropdownOpen = false;
     
   }
+
+
+getProfileImage(): string {
+  const user = this.userService.getCurrentUser();
+  const photo = user?.photo;
+
+  if (!user || !photo) {
+    return 'assets/images/default.png';
+  }
+
+  return `http://localhost:8081/user/uploads/profile_photos/${photo}`;
+}
+
+handleImageError(event: Event) {
+  const target = event.target as HTMLImageElement;
+  target.src = 'assets/images/default.png';
+}
 
 
 

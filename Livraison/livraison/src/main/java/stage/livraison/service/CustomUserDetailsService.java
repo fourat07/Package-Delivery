@@ -15,18 +15,18 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-
     private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
-        }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+        Optional<User> userOpt = Optional.ofNullable(userRepository.findByUsername(username));
+        User user = userOpt.orElseThrow(() -> {
+            System.err.println("❌ User not found: " + username);
+            return new UsernameNotFoundException("User not found with username: " + username);
+        });
+        System.out.println("✅ Loaded user: " + user.getUsername() + ", Role: " + user.getRole().name());
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(), user.getPassword(),
                 Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name())));
     }
-
 }

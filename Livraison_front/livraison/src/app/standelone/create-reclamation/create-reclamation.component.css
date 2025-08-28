@@ -1,0 +1,12 @@
+.error {
+  color: red;
+  font-size: 0.85em;
+}
+
+.buttons {
+  margin-top: 1rem;
+}
+
+button {
+  margin-right: 0.5rem;
+}
